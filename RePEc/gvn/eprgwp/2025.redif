@@ -21,6 +21,7 @@ Author-Name: Roberto Aragão Neto
 Author-Name-First: Roberto
 Author-Name-Last: Aragão Neto
 Title: Mayors within Electoral or Legislative Coalitions? Pre-Electoral Agreements in Brazilian Municipal Legislatures
+Abstract: This work examines whether parties politically connected to the elected mayor have a higher probability of securing the local council presidency at the beginning of the legislative cycle. Results underscore that the support of the Executive branch has a significant causal effect on the choice of the local Speaker. Furthermore, the evidence suggests that, in Municipalities, the government based on legislative coalitions observed at the federal level falls behind a mechanism of pre-electoral agreements, especially electoral coalitions. Taking advantage of these agreements, mayors influence the choice of the local council president, which allows the Executive to offset the absence of institutions that are inherent to the legislative coalition government. To investigate this issue, we assembled a novel dataset on the party affiliation of more than 3,600 Brazilian local councils in 2021, which we paired with a Regression Discontinuity Design (RDD) based on the 2020 mayoral elections in Brazil.
 Creation-Date: 2025-11-21
 Number: 121/2025
 DOI: 10.5281/zenodo.23537234
@@ -39,6 +40,7 @@ Author-Name: Rodrigo Schneider
 Author-Name-First: Rodrigo
 Author-Name-Last: Schneider
 Title: Politics and Public Banks: BNDES Loans to Local Governments in Brazil
+Abstract: This study advances a quantitative political economy analysis of development banking within federative systems, focusing on Brazil’s National Bank for Economic and Social Development (BNDES). Moving beyond traditional fiscal transfer models, we investigate the mechanisms through which federal credit operations are allocated to municipal governments, emphasizing the political incentives that influence these disbursements. We adapt the Strategic Partisan Transfers Hypothesis (SPTH) to the development banking context, formalizing the interaction between federal, state, and local political alignments within Brazil’s regulatory structure. Using an extensive panel dataset and a Regression Discontinuity Design (RDD), we provide empirical evidence that double-aligned municipalities—those aligned with the president’s party but governed by an opposition-aligned state—have a higher probability of receiving federal loans. The RDD design, by leveraging quasi-random variation in close mayoral elections, addresses the limitations of panel models and corrects their tendency to underestimate the true causal effect of mayor-president alignment, particularly in the absence of state-level alignment. Our empirical strategy incorporates detailed controls reflecting the institutional decision-making processes governing municipal access to credit, ensuring that our findings account for both political and bureaucratic determinants of development finance distribution.
 Creation-Date: 2025-06-26
 Number: 120/2025
 Classification-JEL: H77, G21, D72, H81
