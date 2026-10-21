@@ -11,10 +11,7 @@ from bs4 import BeautifulSoup
 checker = "https://econpapers.repec.org/scripts/redifcheck.pl"
 root = "https://econpolrg.github.io/eprg-repec/RePEc/gvn/"
 files = [
-    "gvnarch.redif",
-    "gvnseri.redif",
     "eprgwp/2025.redif",
-    "eprgwp/2026.redif",
 ]
 for path in files:
     target = urljoin(root, path)
@@ -28,4 +25,4 @@ for path in files:
     marker = text.find("Check your ReDIF templates")
     if marker >= 0:
         text = text[marker:]
-    print("HTTP", response.status_code, "RESULT:", text[:3500], flush=True)
+    print("HTTP", response.status_code, "RESULT:", text[:24000], flush=True)
