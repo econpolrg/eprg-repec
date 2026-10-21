@@ -1,13 +1,49 @@
 Template-Type: ReDIF-Paper 1.0
-Author-Name: Daniel Gersten Reiss
-Author-Name-First: Daniel Gersten
+Author-Name: Daniel Reiss
+Author-Name-First: Daniel
 Author-Name-Last: Reiss
-Author-Workplace-Name: Central Bank of Brazil and University of Brasília
 Title: Selective Conscription: Sequential Allocation under Incomplete Information in Brazil's Military Recruitment and Retention System
+Abstract: EPRG Working Paper Series 125/2026
 Creation-Date: 2026-09-22
 Number: 125/2026
-Classification-JEL: H56, D82, J24, J45, D86
 Keywords: conscription, military manpower, screening, incomplete information, regression discontinuity, Brazil
-File-URL: https://econpolrg.com/wp-content/uploads/2026/09/eprg-wp-2026-125.pdf
+DOI: 10.5281/zenodo.23484449
+File-URL: https://zenodo.org/api/records/23484449/files/eprg-wp-2026-125.pdf/content
 File-Format: Application/pdf
 Handle: RePEc:gvn:eprgwp:1252026
+
+Template-Type: ReDIF-Paper 1.0
+Author-Name: Luciana Yeung
+Author-Name-First: Luciana
+Author-Name-Last: Yeung
+Author-Name: Antonio Bruno de Carvalho Morales
+Author-Name-First: Antonio Bruno de
+Author-Name-Last: Carvalho Morales
+Title: Litigation as a "win-win" game: A Theoretical Perspective and Empirical Evidence from Brazilian Labor Courts
+Abstract: EPRG Working Paper Series 124/2026
+Creation-Date: 2026-09-08
+Number: 124/2026
+DOI: 10.5281/zenodo.23484849
+File-URL: https://zenodo.org/api/records/23484849/files/eprg-wp-2026-124.pdf/content
+File-Format: Application/pdf
+Handle: RePEc:gvn:eprgwp:1242026
+
+Template-Type: ReDIF-Paper 1.0
+Author-Name: Débora Costa Ferreira
+Author-Name-First: Débora Costa
+Author-Name-Last: Ferreira
+Author-Name: Rodrigo Schneider
+Author-Name-First: Rodrigo
+Author-Name-Last: Schneider
+Author-Name: Mauricio Bugarin
+Author-Name-First: Mauricio
+Author-Name-Last: Bugarin
+Title: Timing of Opportunism: How Fiscal Rules Reshaped Political Cycles in Brazil
+Abstract: EPRG Working Paper Series 123/2026
+Creation-Date: 2026-02-25
+Number: 123/2026
+Keywords: electoral accountability, fiscal federalism, political budget cycles
+DOI: 10.5281/zenodo.23484998
+File-URL: https://zenodo.org/api/records/23484998/files/eprg-wp-2026-123.pdf/content
+File-Format: Application/pdf
+Handle: RePEc:gvn:eprgwp:1232026
