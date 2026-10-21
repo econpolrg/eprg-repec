@@ -9,6 +9,7 @@ catalogue is deliberately NOT used for indexing or numbering.
 from __future__ import annotations
 
 import difflib
+import json
 import html
 import re
 import sys
@@ -21,6 +22,7 @@ from bs4 import BeautifulSoup
 ROOT = Path("RePEc/gvn/eprgwp")
 HANDLE_PREFIX = "RePEc:gvn:eprgwp:"
 ZENODO_ENDPOINT = "https://zenodo.org/api/records"
+ABSTRACT_FALLBACKS = json.loads(Path("metadata/abstract_overrides.json").read_text(encoding="utf-8"))
 SESSION = requests.Session()
 SESSION.headers.update({
     "Accept": "application/json",
@@ -207,14 +209,12 @@ def generate_paper(record: dict, number: int, year: int) -> tuple[str, str]:
     if not any(x.startswith("Author-Name: ") for x in lines):
         raise ValueError(f"Zenodo record {record.get('id')} has no authors")
     lines.append("Title: " + title)
-    if number in (120, 121) and year == 2025:
-        print("ZENODO METADATA DIAGNOSTIC", number,
-              "keys=", sorted(meta),
-              "description=", repr(meta.get("description", ""))[:350],
-              "additional_descriptions=", repr(meta.get("additional_descriptions", None))[:1200],
-              "custom_fields=", repr(record.get("custom_fields", {}))[:600],
-              flush=True)
     abstract, source = extract_abstract(meta)
+    if not abstract:
+        fallback = ABSTRACT_FALLBACKS.get(handle) or {}
+        abstract = clean(fallback.get("abstract"))
+        if abstract:
+            source = "curated EPRG/paper abstract: " + str(fallback.get("source_url"))
     print(f"ABSTRACT {number}/{year}: {source}; {len(abstract)} characters", flush=True)
     if abstract:
         lines.append("Abstract: " + abstract)
