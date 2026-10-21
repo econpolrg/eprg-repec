@@ -26,6 +26,12 @@ The workflow only commits data when ReDIF files actually change. Before publicat
 
 GitHub may automatically disable scheduled workflows after 60 days of repository inactivity in public repositories; check the Actions page if there has been no repository activity for an extended period. Scheduled jobs can also start late.
 
+## Official syntax validation (21 October 2026)
+
+The official [EconPapers ReDIF::Perl checker](https://econpapers.repec.org/scripts/redifcheck.pl) was executed against all four public templates. Result: **0 syntax errors** and **1 harmless warning** (the authentic full name `Priscila Honório Evangelista de Souza` is heuristically flagged as potentially multiple authors). Do not shorten or alter a correct author name solely to suppress this warning.
+
+The reproducible administrative workflow is [Inspect official ReDIF syntax checker](https://github.com/econpolrg/eprg-repec/actions/workflows/check-official-redif.yml). This is separate from the six-hour sync, so the public RePEc checker is not unnecessarily queried every six hours. Final archive activation remains subject to the RePEc maintainers' confirmation.
+
 ## Metadata generation
 
 Run the existing [Zenodo import GitHub Action](https://github.com/econpolrg/eprg-repec/actions/workflows/sync-zenodo.yml) using **Run workflow** on branch `main`. The workflow also runs when its script or configuration is updated.
