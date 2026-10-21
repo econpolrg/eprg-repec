@@ -25,4 +25,6 @@ for path in files:
     marker = text.find("Check your ReDIF templates")
     if marker >= 0:
         text = text[marker:]
-    print("HTTP", response.status_code, "RESULT:", text[:24000], flush=True)
+    print("HTTP", response.status_code, "RESULT:", text[:3000], flush=True)
+    position = response.text.find("First error/warning line")
+    print("HTML NEAR WARNING:", response.text[max(0, position-2500):position+6000], flush=True)
