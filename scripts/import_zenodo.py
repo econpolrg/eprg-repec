@@ -177,6 +177,23 @@ def placeholder_abstract(value: str) -> bool:
     ))
 
 
+
+def extract_abstract(metadata: dict) -> tuple[str, str]:
+    """Find scientific abstracts in primary or typed Zenodo descriptions."""
+    primary = clean(metadata.get("description"))
+    if primary and not placeholder_abstract(primary):
+        return primary, "metadata.description"
+    for entry in metadata.get("additional_descriptions") or []:
+        if not isinstance(entry, dict):
+            continue
+        kind = entry.get("type") or {}
+        kind = kind.get("id", "") if isinstance(kind, dict) else str(kind)
+        candidate = clean(entry.get("description"))
+        if str(kind).casefold() == "abstract" and candidate and not placeholder_abstract(candidate):
+            return candidate, "metadata.additional_descriptions[abstract]"
+    return "", "not found"
+
+
 def generate_paper(record: dict, number: int, year: int) -> tuple[str, str]:
     meta = record.get("metadata") or {}
     handle = f"{HANDLE_PREFIX}{number}{year}"
@@ -190,8 +207,9 @@ def generate_paper(record: dict, number: int, year: int) -> tuple[str, str]:
     if not any(x.startswith("Author-Name: ") for x in lines):
         raise ValueError(f"Zenodo record {record.get('id')} has no authors")
     lines.append("Title: " + title)
-    abstract = clean(meta.get("description"))
-    if abstract and not placeholder_abstract(abstract):
+    abstract, source = extract_abstract(meta)
+    print(f"ABSTRACT {number}/{year}: {source}; {len(abstract)} characters", flush=True)
+    if abstract:
         lines.append("Abstract: " + abstract)
     published = str(meta.get("publication_date") or "").strip()
     if published:
