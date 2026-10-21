@@ -18,6 +18,14 @@ The importer verifies the EPRG paper number against an explicitly numbered serie
 
 The Editorial decision to include papers in the series is made by the **scientific editor**, Maurício Bugarin. The RePEc maintainer administers this repository and ensures correct metadata extraction and publication.
 
+## Automatic synchronization and validation
+
+The GitHub Actions workflow [Import EPRG papers from Zenodo](https://github.com/econpolrg/eprg-repec/actions/workflows/sync-zenodo.yml) checks published Zenodo community records **every six hours**, at `00:17`, `06:17`, `12:17` and `18:17 UTC` (approximately `21:17`, `03:17`, `09:17` and `15:17` in Brasília). Manual `Run workflow` remains available.
+
+The workflow only commits data when ReDIF files actually change. Before publication, `scripts/validate_repec.py` validates archive/series/paper template structure, identifiers, JEL format, DOI uniqueness and HTML directory links. After deployment, GitHub Actions checks the public HTTP URLs. This **local preflight validation is not a substitute for the official ReDIF::Perl syntax checker** (https://econpapers.repec.org/scripts/redifcheck.pl) or for the RePEc maintainers' final approval.
+
+GitHub may automatically disable scheduled workflows after 60 days of repository inactivity in public repositories; check the Actions page if there has been no repository activity for an extended period. Scheduled jobs can also start late.
+
 ## Metadata generation
 
 Run the existing [Zenodo import GitHub Action](https://github.com/econpolrg/eprg-repec/actions/workflows/sync-zenodo.yml) using **Run workflow** on branch `main`. The workflow also runs when its script or configuration is updated.
