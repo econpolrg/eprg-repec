@@ -35,6 +35,6 @@ After ensuring all three levels of index pages and ReDIF files are publicly acce
 
 https://econpolrg.github.io/eprg-repec/RePEc/gvn/
 
-Do not change the assigned archive/series handles after registration. The archive and series metadata currently use `econpolrg@gmail.com` as the contact address, based on the email publicly used by EPRG in its materials; confirm that this inbox is still monitored.
+Do not change the assigned archive/series handles after registration. The archive and series maintainer email is `daniel.reiss@unb.br`.
 
 Official instructions: https://ideas.repec.org/stepbystep.html
