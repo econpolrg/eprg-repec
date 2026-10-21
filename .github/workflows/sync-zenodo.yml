@@ -70,3 +70,17 @@ jobs:
       - name: Deploy archive metadata to GitHub Pages
         id: deployment
         uses: actions/deploy-pages@v4
+
+  verify-pages:
+    needs: deploy-pages
+    runs-on: ubuntu-24.04
+    steps:
+      - name: Check indexable archive and series
+        run: |
+          set -euo pipefail
+          root="https://econpolrg.github.io/eprg-repec/RePEc/gvn"
+          for item in "/" "/gvnarch.redif" "/gvnseri.redif" "/eprgwp/" "/eprgwp/2025.redif" "/eprgwp/2026.redif"; do
+            printf "Checking %s\n" "$root$item"
+            curl --fail --location --silent --show-error --retry 8 --retry-delay 4 --output /dev/null "$root$item"
+          done
+          echo "All RePEc archive URLs are publicly accessible"
