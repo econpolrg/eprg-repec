@@ -207,6 +207,13 @@ def generate_paper(record: dict, number: int, year: int) -> tuple[str, str]:
     if not any(x.startswith("Author-Name: ") for x in lines):
         raise ValueError(f"Zenodo record {record.get('id')} has no authors")
     lines.append("Title: " + title)
+    if number in (120, 121) and year == 2025:
+        print("ZENODO METADATA DIAGNOSTIC", number,
+              "keys=", sorted(meta),
+              "description=", repr(meta.get("description", ""))[:350],
+              "additional_descriptions=", repr(meta.get("additional_descriptions", None))[:1200],
+              "custom_fields=", repr(record.get("custom_fields", {}))[:600],
+              flush=True)
     abstract, source = extract_abstract(meta)
     print(f"ABSTRACT {number}/{year}: {source}; {len(abstract)} characters", flush=True)
     if abstract:
