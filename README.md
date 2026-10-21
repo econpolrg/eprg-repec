@@ -1,40 +1,43 @@
-# EPRG RePEc Archive
+# EPRG — RePEc Working Paper Archive
 
-Official metadata repository for the **Economics and Politics Research Group (EPRG)**, Universidade de Brasília.
+Official RePEc metadata archive for the Economics and Politics Research Group (EPRG), Universidade de Brasília.
 
-- RePEc archive: `RePEc:gvn`
-- Working paper series: `RePEc:gvn:eprgwp`
-- Public metadata URL: https://econpolrg.github.io/eprg-repec/RePEc/gvn/
-- Original working papers catalogue: https://econpolrg.com/working-papers/
-- Zenodo community: https://zenodo.org/communities/econpolrg/records
+- Archive handle: `RePEc:gvn`
+- Working paper series handle: `RePEc:gvn:eprgwp`
+- Public RePEc mirror directory: https://econpolrg.github.io/eprg-repec/RePEc/gvn/
+- **Scientific series editor:** Maurício Bugarin — mauricio.s.bugarin@gmail.com
+- **Archive and metadata maintainer:** Daniel Gersten Reiss — daniel.reiss@unb.br
+- Authoritative list of currently deposited 2025/2026 EPRG papers: https://zenodo.org/communities/econpolrg/records
+- Group website (for institutional information): https://econpolrg.com/
 
-## Import papers already published on Zenodo
+## Publication and numbering authority
 
-Go to [GitHub Actions — Import EPRG papers from Zenodo](https://github.com/econpolrg/eprg-repec/actions/workflows/sync-zenodo.yml), select **Run workflow** and choose branch `main`.
+**Zenodo is the authoritative publication source for the currently deposited EPRG working papers.** The WordPress catalogue may lag or contain incorrect historical numbers; it is NOT used for selecting or numbering papers in this repository.
 
-The workflow uses the **public Zenodo API** without a personal token, matches Zenodo publication titles against the EPRG numbered working-paper catalogue, and commits valid records to `RePEc/gvn/eprgwp/YYYY.redif`. It also updates the clickable series `index.html`. Unmatched Zenodo records are reported in the Action logs and **are not assigned invented working-paper numbers**.
+The importer verifies the EPRG paper number against an explicitly numbered series description and/or PDF filename (e.g., `eprg-wp-2025-121.pdf`). Disagreements cause an error; missing numbers are reported rather than inferred. Previously published metadata is retained when the Zenodo record no longer appears, so stable RePEc handles are not accidentally deleted.
 
-Zenodo remains the DOI/PDF repository; RePEc stores metadata and points users to the original PDFs. ORCID identifiers remain associated with Zenodo creator records; no unsupported ReDIF ORCID field is inserted.
+The Editorial decision to include papers in the series is made by the **scientific editor**, Maurício Bugarin. The RePEc maintainer administers this repository and ensures correct metadata extraction and publication.
 
-## Files
+## Metadata generation
 
-```text
-RePEc/
-  gvn/
-    index.html          HTML directory index for RePEc mirroring
-    gvnarch.redif       Archive metadata
-    gvnseri.redif       Working paper series metadata
-    eprgwp/
-      index.html        HTML index of the yearly ReDIF files
-      2026.redif        Paper metadata, initially seeded with WP 125/2026
-```
+Run the existing [Zenodo import GitHub Action](https://github.com/econpolrg/eprg-repec/actions/workflows/sync-zenodo.yml) using **Run workflow** on branch `main`. The workflow also runs when its script or configuration is updated.
 
-## RePEc enrollment
+The importer reads publicly published records in the `econpolrg` Zenodo community. It needs no private token. It extracts:
+- Paper number and year from the Zenodo record (independently of the website catalogue);
+- Title, authors, abstract, publication date, DOI, and PDF URL;
+- **JEL codes** embedded among Zenodo keywords, into `Classification-JEL:`;
+- Other keywords, into `Keywords:`.
 
-After ensuring all three levels of index pages and ReDIF files are publicly accessible, validate the templates and email RePEc maintainer Kit Baum the archive URL (not the repository source code URL):
+Manual corrections already reviewed (e.g. author name spellings, affiliations) are preserved when consistent with the current Zenodo authors. Zenodo metadata otherwise takes priority. ORCID remains available in Zenodo creator metadata; it is not copied into an unsupported ReDIF field.
 
-https://econpolrg.github.io/eprg-repec/RePEc/gvn/
+Annual metadata files live at `RePEc/gvn/eprgwp/YYYY.redif`, with one template per paper. The `index.html` pages make the files discoverable by RePEc's mirroring software.
 
-Do not change the assigned archive/series handles after registration. The archive and series maintainer email is `daniel.reiss@unb.br`.
+## Initial 2025/2026 coverage
 
-Official instructions: https://ideas.repec.org/stepbystep.html
+The first Zenodo-based import covers 2025 working papers 120, 121, 122 and 2026 working papers 123, 124, 125. All six have DOI links. Missing JEL codes or other optional fields in an individual Zenodo record are not invented.
+
+## RePEc onboarding
+
+Check that https://econpolrg.github.io/eprg-repec/RePEc/gvn/ lists the archive, series and papers, validate the ReDIF templates, then send that exact archive directory URL to RePEc maintainer Kit Baum for inclusion. See https://ideas.repec.org/stepbystep.html.
+
+Do not rename already-issued RePEc handles after registration.
