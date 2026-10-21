@@ -1,12 +1,13 @@
 #!/usr/bin/env python3
-"""Import EPRG community Zenodo records into RePEc ReDIF templates.
+"""Synchronize EPRG Working Papers from the published Zenodo community to RePEc.
 
-Public APIs only: no Zenodo token is required. Matching against the EPRG
-working-paper catalogue avoids inventing or misassigning paper numbers.
+Canonical publication source: Zenodo community econpolrg.
+Working-paper numbers are independently verified against each Zenodo record's
+PDF filename and/or explicitly numbered series description. The WordPress
+catalogue is deliberately NOT used for indexing or numbering.
 """
 from __future__ import annotations
 
-import datetime as dt
 import difflib
 import html
 import re
@@ -17,15 +18,14 @@ from pathlib import Path
 import requests
 from bs4 import BeautifulSoup
 
-ARCHIVE = Path("RePEc/gvn/eprgwp")
-CATALOG_URL = "https://econpolrg.com/working-papers/"
-ZENODO_URLS = [
-    "https://zenodo.org/api/communities/econpolrg/records",
-    "https://zenodo.org/api/records",
-]
+ROOT = Path("RePEc/gvn/eprgwp")
+HANDLE_PREFIX = "RePEc:gvn:eprgwp:"
+ZENODO_ENDPOINT = "https://zenodo.org/api/records"
 SESSION = requests.Session()
-SESSION.headers.update({"Accept": "application/json", "User-Agent": "EPRG-RePEc-Metadata/1.0 (https://econpolrg.com/)"})
-SERIES_PREFIX = "RePEc:gvn:eprgwp:"
+SESSION.headers.update({
+    "Accept": "application/json",
+    "User-Agent": "EPRG-RePEc-Metadata/2.0 (https://econpolrg.com/)",
+})
 
 
 def clean(value: object) -> str:
@@ -35,263 +35,308 @@ def clean(value: object) -> str:
     return re.sub(r"\s+", " ", html.unescape(text)).strip()
 
 
-def normalized(text: str) -> str:
-    text = unicodedata.normalize("NFKD", text)
-    text = "".join(ch for ch in text if not unicodedata.combining(ch))
-    text = text.casefold()
-    text = re.sub(r"^(?:eprg\s*)?(?:working\s*paper|wp)\s*(?:no\.?|number|#)?\s*\d+\s*[/\-]\s*20\d{2}\s*[:\-–—]*\s*", "", text)
-    return re.sub(r"[^a-z0-9]+", " ", text).strip()
+def normalized(value: str) -> str:
+    value = unicodedata.normalize("NFKD", value)
+    value = "".join(c for c in value if not unicodedata.combining(c))
+    return re.sub(r"[^a-z0-9]+", " ", value.casefold()).strip()
 
 
-def catalogue():
-    response = SESSION.get(CATALOG_URL, timeout=40)
-    response.raise_for_status()
-    soup = BeautifulSoup(response.text, "html.parser")
-    data = []
-    for row in soup.select("tr"):
-        cells = row.find_all(["td", "th"])
-        if len(cells) < 3:
-            continue
-        number = clean(cells[0].get_text(" ", strip=True))
-        m = re.fullmatch(r"(\d{1,4})\s*/\s*(20\d{2})", number)
-        anchor = cells[2].find("a", href=True)
-        if not m or not anchor:
-            continue
-        raw_date = clean(cells[1].get_text(" ", strip=True))
-        date = ""
-        for fmt in ("%m-%d-%Y", "%m/%d/%Y", "%Y-%m-%d"):
-            try:
-                date = dt.datetime.strptime(raw_date, fmt).date().isoformat()
-                break
-            except ValueError:
-                continue
-        data.append({
-            "number": int(m.group(1)), "year": int(m.group(2)),
-            "title": clean(anchor.get_text(" ", strip=True)),
-            "date": date, "site_pdf": anchor["href"],
-        })
-    if not data:
-        raise RuntimeError("Could not read numbered papers from EPRG catalogue")
-    return data
-
-
-def zenodo_records():
-    """Fetch all published EPRG community records through the public Zenodo API.
-
-    The records API uses 'mostrecent', not the 'newest' value used in the
-    Zenodo web interface. Keep the anonymous page size at or below 25.
-    """
-    url = "https://zenodo.org/api/records"
+def read_zenodo_records() -> list[dict]:
+    url = ZENODO_ENDPOINT
     params = {"communities": "econpolrg", "size": 20, "sort": "mostrecent"}
-    records = []
+    records: list[dict] = []
     for page in range(50):
         response = SESSION.get(url, params=params, timeout=40)
         if not response.ok:
             raise RuntimeError(
-                f"Zenodo API failed (page {page + 1}, HTTP {response.status_code}): "
-                + response.text[:1200]
+                f"Zenodo HTTP {response.status_code} page {page + 1}: "
+                + response.text[:700]
             )
-        payload = response.json()
-        records.extend(payload.get("hits", {}).get("hits", []))
-        url = payload.get("links", {}).get("next")
+        body = response.json()
+        records.extend(body.get("hits", {}).get("hits", []))
+        url = body.get("links", {}).get("next")
         if not url:
             break
-        params = None  # Zenodo's next link already includes pagination fields.
+        params = None
     if not records:
-        raise RuntimeError("No published records returned for Zenodo community 'econpolrg'")
-    print(f"Found {len(records)} Zenodo community records", flush=True)
+        raise RuntimeError("Zenodo community econpolrg returned no published records")
+    print(f"Zenodo community: {len(records)} published records", flush=True)
     return records
 
-def paper_match(title, data):
-    key = normalized(title)
-    ranked = [(difflib.SequenceMatcher(None, key, normalized(item["title"])).ratio(), item) for item in data]
-    if not ranked:
+
+def pdf_entries(record: dict) -> list[tuple[str, str]]:
+    files = record.get("files") or {}
+    if isinstance(files, dict):
+        entries = files.get("entries") or {}
+        iterable = entries.values() if isinstance(entries, dict) else entries
+    else:
+        iterable = files
+    results = []
+    for entry in iterable:
+        name = str(entry.get("key") or entry.get("filename") or "")
+        if not name.lower().endswith(".pdf"):
+            continue
+        links = entry.get("links") or {}
+        url = links.get("content") or links.get("self") or ""
+        if url:
+            results.append((name, url))
+    return results
+
+
+def paper_identity(record: dict) -> tuple[int, int] | None:
+    """Number from explicit series metadata; cross-check against EPRG PDF name."""
+    meta = record.get("metadata") or {}
+    sources: list[tuple[str, int, int]] = []
+    pattern = re.compile(
+        r"(?:eprg[-_. ]*)?wp[-_. ]*(20\d{2})[-_. ]+(\d{1,4})(?:[-_. ]|$)",
+        re.IGNORECASE,
+    )
+    for filename, _ in pdf_entries(record):
+        match = pattern.search(filename)
+        if match:
+            sources.append((filename, int(match.group(2)), int(match.group(1))))
+
+    series = re.compile(
+        r"(?:economics\s+and\s+politics\s+|eprg\s+)?"
+        r"working\s+paper(?:\s+series)?\s*"
+        r"(?:number|no\.?|#)?\s*(\d{1,4})\s*[/\-]\s*(20\d{2})",
+        re.IGNORECASE,
+    )
+    for name in ("description", "title", "notes"):
+        text = clean(meta.get(name))
+        match = series.search(text)
+        if match:
+            sources.append((name, int(match.group(1)), int(match.group(2))))
+
+    if not sources:
         return None
-    score, item = max(ranked, key=lambda t: t[0])
-    return item if score >= 0.90 else None
+    options = {(n, y) for _, n, y in sources}
+    if len(options) > 1:
+        raise ValueError(f"Conflicting paper numbering for Zenodo {record.get('id')}: {sources}")
+    number, year = options.pop()
+    if not 2013 <= year <= 2100 or number < 1:
+        raise ValueError(f"Invalid paper number/year from Zenodo {record.get('id')}")
+    return number, year
 
 
-def is_placeholder_abstract(value):
-    """Do not mislabel a Zenodo series placeholder as a paper abstract."""
-    return bool(re.fullmatch(
-        r"eprg working paper series \d+ 20\d{2}",
-        normalized(clean(value)),
-    ))
-
-
-def author_lines(creator):
+def creator_lines(creator: dict) -> list[str]:
     info = creator.get("person_or_org") or creator
-    name = clean(info.get("name") or "")
-    given = clean(info.get("given_name") or "")
-    family = clean(info.get("family_name") or "")
+    given = clean(info.get("given_name"))
+    family = clean(info.get("family_name"))
+    name = clean(info.get("name"))
     if given and family:
-        # Some Zenodo creators have their surname in both name parts.
+        # Correct duplicated surnames in some manually entered Zenodo names.
         if normalized(given).endswith(normalized(family)):
-            given = given[: -len(family)].rstrip()
+            given = given[: -len(family)].strip()
         name = (given + " " + family).strip()
     elif not name:
         name = (given + " " + family).strip()
     if "," in name and not (given and family):
-        family, given = (part.strip() for part in name.split(",", 1))
+        family, given = (p.strip() for p in name.split(",", 1))
         name = (given + " " + family).strip()
-    result = ["Author-Name: " + name] if name else []
+    lines = ["Author-Name: " + name] if name else []
     if given and family:
-        result.extend(["Author-Name-First: " + given, "Author-Name-Last: " + family])
-    return result
+        lines.extend(["Author-Name-First: " + given, "Author-Name-Last: " + family])
+    return lines
 
 
-def pdf_url(record, fallback):
-    files = record.get("files") or {}
-    if isinstance(files, dict):
-        entries = files.get("entries") or {}
-        entries = entries.values() if isinstance(entries, dict) else entries
-    elif isinstance(files, list):
-        entries = files
-    else:
-        entries = []
-    for file in entries:
-        name = str(file.get("key") or file.get("filename") or "")
-        if name.lower().endswith(".pdf"):
-            links = file.get("links") or {}
-            return links.get("content") or links.get("self") or fallback
-    return fallback
+def jel_and_keywords(meta: dict) -> tuple[list[str], list[str]]:
+    values = meta.get("keywords") or []
+    if not values:
+        values = [
+            item.get("subject", "")
+            for item in (meta.get("subjects") or [])
+            if isinstance(item, dict)
+        ]
+    jel_codes: list[str] = []
+    keywords: list[str] = []
+    code = re.compile(r"^[A-Z]\d{2}$")
+    for item in values:
+        term = clean(item.get("subject") if isinstance(item, dict) else item)
+        if not term:
+            continue
+        if code.fullmatch(term.upper()):
+            value = term.upper()
+            if value not in jel_codes:
+                jel_codes.append(value)
+        elif re.match(r"^JEL(?:\s+(?:classification|codes?))?\s*[:\- ]", term, re.I):
+            codes = re.findall(r"\b[A-Z]\d{2}\b", term.upper())
+            for value in codes:
+                if value not in jel_codes:
+                    jel_codes.append(value)
+        elif term not in keywords:
+            keywords.append(term)
+    return jel_codes, keywords
 
 
-def format_paper(record, item):
-    metadata = record.get("metadata") or {}
-    handle = f'{SERIES_PREFIX}{item["number"]}{item["year"]}'
+def placeholder_abstract(value: str) -> bool:
+    key = normalized(value)
+    return bool(re.fullmatch(
+        r"(?:eprg|economics and politics) working paper(?: series)? \d+ 20\d{2}",
+        key,
+    ))
+
+
+def generate_paper(record: dict, number: int, year: int) -> tuple[str, str]:
+    meta = record.get("metadata") or {}
+    handle = f"{HANDLE_PREFIX}{number}{year}"
+    title = clean(meta.get("title"))
+    if not title:
+        raise ValueError(f"Zenodo record {record.get('id')} has no title")
+
     lines = ["Template-Type: ReDIF-Paper 1.0"]
-    for creator in metadata.get("creators") or []:
-        lines.extend(author_lines(creator))
-    if not any(line.startswith("Author-Name:") for line in lines):
-        raise ValueError(f"No authors found for {metadata.get('title')}")
-    lines.append("Title: " + clean(metadata.get("title") or item["title"]))
-    abstract = clean(metadata.get("description"))
-    if abstract and not is_placeholder_abstract(abstract):
+    for creator in meta.get("creators") or []:
+        lines.extend(creator_lines(creator))
+    if not any(x.startswith("Author-Name: ") for x in lines):
+        raise ValueError(f"Zenodo record {record.get('id')} has no authors")
+    lines.append("Title: " + title)
+    abstract = clean(meta.get("description"))
+    if abstract and not placeholder_abstract(abstract):
         lines.append("Abstract: " + abstract)
-    date = item["date"] or str(metadata.get("publication_date") or "")[:10]
-    if date:
-        lines.append("Creation-Date: " + date)
-    lines.append(f'Number: {item["number"]}/{item["year"]}')
-    keywords = metadata.get("keywords") or [s.get("subject") for s in metadata.get("subjects", []) if isinstance(s, dict)]
-    words = [clean(k.get("subject") if isinstance(k, dict) else k) for k in keywords]
-    words = [w for w in words if w]
-    if words:
-        lines.append("Keywords: " + ", ".join(words))
-    doi = ((record.get("pids") or {}).get("doi") or {}).get("identifier") or record.get("doi") or ""
-    doi = str(doi).replace("https://doi.org/", "").strip()
+    published = str(meta.get("publication_date") or "").strip()
+    if published:
+        lines.append("Creation-Date: " + published[:10])
+    lines.append(f"Number: {number}/{year}")
+
+    jel, keywords = jel_and_keywords(meta)
+    if jel:
+        lines.append("Classification-JEL: " + ", ".join(jel))
+    if keywords:
+        lines.append("Keywords: " + ", ".join(keywords))
+
+    doi = ((record.get("pids") or {}).get("doi") or {}).get("identifier")
+    doi = doi or record.get("doi") or ""
+    doi = str(doi).removeprefix("https://doi.org/").strip()
     if doi:
         lines.append("DOI: " + doi)
-    pdf = pdf_url(record, item["site_pdf"])
-    if pdf:
-        lines.extend(["File-URL: " + pdf, "File-Format: Application/pdf"])
+
+    files = pdf_entries(record)
+    if files:
+        lines.append("File-URL: " + files[0][1])
+        lines.append("File-Format: Application/pdf")
     lines.append("Handle: " + handle)
     return handle, "\n".join(lines)
 
 
-def merge_curated(existing, generated):
-    """Preserve reviewed ReDIF author names, affiliations and JEL codes.
+def extract_names(template: str) -> list[str]:
+    return re.findall(r"^Author-Name: (.+)$", template, re.M)
 
-    DOI, title, dates and file URLs may be refreshed from Zenodo. A missing
-    or placeholder Zenodo abstract never deletes a genuine previous abstract.
+
+def preserve_manual_edits(existing: str | None, generated: str) -> str:
+    """Zenodo is the publication source; retain verified local corrections.
+
+    Reviewed author display names/affiliations are kept only when the current
+    Zenodo author count and names remain close. The current Zenodo JEL and
+    keywords override earlier local values; otherwise reviewed values remain.
     """
     if not existing:
         return generated
+    old_authors = extract_names(existing)
+    new_authors = extract_names(generated)
+    close_enough = (
+        len(old_authors) == len(new_authors)
+        and all(
+            difflib.SequenceMatcher(None, normalized(a), normalized(b)).ratio() >= 0.70
+            for a, b in zip(old_authors, new_authors)
+        )
+    )
+    lines = generated.splitlines()
     old_lines = existing.splitlines()
-    new_lines = generated.splitlines()
-    saved_authors = [line for line in old_lines if line.startswith("Author-")]
-    if saved_authors:
-        new_lines = [line for line in new_lines if not line.startswith("Author-")]
-        new_lines[1:1] = saved_authors
-    for field in ("Classification-JEL", "Keywords", "Abstract"):
-        old_field = next(
-            (line for line in old_lines if line.startswith(field + ": ")), None
-        )
-        new_field = next(
-            (line for line in new_lines if line.startswith(field + ": ")), None
-        )
-        if field == "Abstract" and old_field and is_placeholder_abstract(
-            old_field.partition(": ")[2]
+    if close_enough:
+        curated = [x for x in old_lines if x.startswith("Author-")]
+        lines = [x for x in lines if not x.startswith("Author-")]
+        lines[1:1] = curated
+
+    for field in ("Abstract", "Classification-JEL", "Keywords"):
+        present = any(x.startswith(field + ": ") for x in lines)
+        if present:
+            continue
+        previous = next((x for x in old_lines if x.startswith(field + ": ")), None)
+        if previous and not (
+            field == "Abstract" and placeholder_abstract(previous.partition(": ")[2])
         ):
-            old_field = None
-        if old_field and not new_field:
-            insert_before = next(
-                (i for i, line in enumerate(new_lines) if line.startswith("Handle: ")),
-                len(new_lines),
+            pos = next(
+                (i for i, x in enumerate(lines) if x.startswith("Handle: ")),
+                len(lines),
             )
-            new_lines.insert(insert_before, old_field)
-    return "\n".join(new_lines)
+            lines.insert(pos, previous)
+    return "\n".join(lines)
 
 
-def load_existing(year):
-    path = ARCHIVE / f"{year}.redif"
+def load_existing(year: int) -> dict[str, str]:
+    path = ROOT / f"{year}.redif"
     if not path.exists():
         return {}
-    result = {}
-    for block in re.split(r"\n(?=Template-Type:)", path.read_text(encoding="utf-8").strip()):
-        m = re.search(r"^Handle: (RePEc:gvn:eprgwp:[^\s]+)\s*$", block, re.M)
-        if m:
-            result[m.group(1)] = block.strip()
-    return result
+    content = path.read_text(encoding="utf-8")
+    blocks = re.split(r"\n(?=Template-Type: ReDIF-Paper 1\.0)", content.strip())
+    templates = {}
+    for block in blocks:
+        match = re.search(rf"^Handle: ({re.escape(HANDLE_PREFIX)}\S+)$", block, re.M)
+        if match:
+            templates[match.group(1)] = block.strip()
+    return templates
 
 
-def write_index(years):
-    rows = "\n".join(f'<li><a href="{year}.redif">{year} working papers</a></li>' for year in sorted(years, reverse=True))
-    markup = ("""<!doctype html>
-<html lang="en"><head><meta charset="utf-8"><title>EPRG Working Papers - ReDIF</title></head>
-<body><h1>EPRG Working Paper Series - ReDIF metadata</h1>
-<ul>
-""" + rows + """
-</ul><p><a href="../">Back to RePEc:gvn</a></p></body></html>
-""")
-    (ARCHIVE / "index.html").write_text(markup, encoding="utf-8")
+def save_index(years: list[int]) -> None:
+    rows = "\n".join(
+        f'<li><a href="{year}.redif">{year} working papers</a></li>'
+        for year in sorted(years, reverse=True)
+    )
+    page = (
+        '<!doctype html>\n<html lang="en"><head><meta charset="utf-8">'
+        "<title>EPRG Working Papers - ReDIF</title></head>\n"
+        "<body><h1>EPRG Working Paper Series - ReDIF metadata</h1>\n<ul>\n"
+        + rows + '\n</ul><p><a href="../">Back to RePEc:gvn</a></p>'
+        "</body></html>\n"
+    )
+    (ROOT / "index.html").write_text(page, encoding="utf-8")
 
 
-def main():
-    catalog = catalogue()
-    records = zenodo_records()
-    for rec in records:
-        meta = rec.get("metadata") or {}
-        files = rec.get("files") or {}
-        if isinstance(files, dict):
-            names = list((files.get("entries") or {}).keys())
-        else:
-            names = [f.get("key") or f.get("filename") for f in files]
-        print("AUDIT ZENODO:", rec.get("id"),
-              "title=", clean(meta.get("title")),
-              "files=", names,
-              "keywords=", meta.get("keywords", []),
-              "description=", clean(meta.get("description", ""))[:100], flush=True)
-    per_year = {}
-    match_count = 0
-    misses = []
+def main() -> None:
+    records = read_zenodo_records()
+    per_year: dict[int, dict[str, str]] = {}
+    imported = 0
+    missing_numbers = []
+    used_handles: dict[str, str] = {}
+
     for record in records:
-        meta = record.get("metadata") or {}
-        title = clean(meta.get("title"))
-        item = paper_match(title, catalog)
-        if item is None:
-            misses.append(f'{record.get("id", "?")}: {title}')
+        title = clean((record.get("metadata") or {}).get("title"))
+        identity = paper_identity(record)
+        if identity is None:
+            missing_numbers.append(f"{record.get('id')}: {title}")
             continue
-        handle, template = format_paper(record, item)
-        year = item["year"]
+        number, year = identity
+        handle, template = generate_paper(record, number, year)
+        doi = ((record.get("pids") or {}).get("doi") or {}).get("identifier") or str(record.get("id"))
+        if handle in used_handles and doi != used_handles[handle]:
+            raise ValueError(f"Two distinct Zenodo records claim the same handle: {handle}")
+        used_handles[handle] = str(doi)
+
         if year not in per_year:
             per_year[year] = load_existing(year)
-        per_year[year][handle] = merge_curated(per_year[year].get(handle), template)
-        match_count += 1
-        print(f"MATCH {item['number']}/{year}: {title} -> {handle}")
-    if not match_count:
-        raise RuntimeError("No Zenodo records matched numbered EPRG working papers; nothing changed")
-    ARCHIVE.mkdir(parents=True, exist_ok=True)
-    for year, blocks in sorted(per_year.items()):
-        ordered = sorted(blocks.items(), key=lambda kv: kv[0], reverse=True)
-        (ARCHIVE / f"{year}.redif").write_text("\n\n".join(v for _, v in ordered) + "\n", encoding="utf-8")
-    years = [int(p.stem) for p in ARCHIVE.glob("20??.redif")]
-    write_index(years)
-    print(f"Matched {match_count} of {len(records)} published Zenodo community records")
-    if misses:
-        print("Records not in official numbered series (not imported):", file=sys.stderr)
-        for miss in misses:
-            print("  " + miss, file=sys.stderr)
+        template = preserve_manual_edits(per_year[year].get(handle), template)
+        per_year[year][handle] = template
+        imported += 1
+        jel, _ = jel_and_keywords(record.get("metadata") or {})
+        print(f"IMPORT {number}/{year} (Zenodo {record.get('id')}; JEL: {', '.join(jel) or 'not supplied'}) — {title}")
+
+    if not imported:
+        raise RuntimeError("No numbered EPRG working papers could be identified in Zenodo")
+    ROOT.mkdir(parents=True, exist_ok=True)
+    for year, templates in per_year.items():
+        sort_num = lambda pair: int(re.search(r":(\d+)"+str(year)+r"$", pair[0]).group(1))
+        entries = sorted(templates.items(), key=sort_num, reverse=True)
+        (ROOT / f"{year}.redif").write_text(
+            "\n\n".join(template for _, template in entries) + "\n",
+            encoding="utf-8",
+        )
+    years = [int(p.stem) for p in ROOT.glob("20??.redif")]
+    save_index(years)
+    print(f"Imported {imported} of {len(records)} published EPRG Zenodo records")
+    if missing_numbers:
+        print("Not indexed because no unambiguous working-paper number was found:", file=sys.stderr)
+        for item in missing_numbers:
+            print("  " + item, file=sys.stderr)
 
 
 if __name__ == "__main__":
