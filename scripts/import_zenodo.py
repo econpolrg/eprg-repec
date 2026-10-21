@@ -32,14 +32,14 @@ def clean(value: object) -> str:
     if value is None:
         return ""
     text = BeautifulSoup(str(value), "html.parser").get_text(" ", strip=True)
-    return re.sub(r"\\s+", " ", html.unescape(text)).strip()
+    return re.sub(r"\s+", " ", html.unescape(text)).strip()
 
 
 def normalized(text: str) -> str:
     text = unicodedata.normalize("NFKD", text)
     text = "".join(ch for ch in text if not unicodedata.combining(ch))
     text = text.casefold()
-    text = re.sub(r"^(?:eprg\\s*)?(?:working\\s*paper|wp)\\s*(?:no\\.?|number|#)?\\s*\\d+\\s*[/\\-]\\s*20\\d{2}\\s*[:\\-–—]*\\s*", "", text)
+    text = re.sub(r"^(?:eprg\s*)?(?:working\s*paper|wp)\s*(?:no\.?|number|#)?\s*\d+\s*[/\-]\s*20\d{2}\s*[:\-–—]*\s*", "", text)
     return re.sub(r"[^a-z0-9]+", " ", text).strip()
 
 
@@ -53,7 +53,7 @@ def catalogue():
         if len(cells) < 3:
             continue
         number = clean(cells[0].get_text(" ", strip=True))
-        m = re.fullmatch(r"(\\d{1,4})\\s*/\\s*(20\\d{2})", number)
+        m = re.fullmatch(r"(\d{1,4})\s*/\s*(20\d{2})", number)
         anchor = cells[2].find("a", href=True)
         if not m or not anchor:
             continue
@@ -94,9 +94,8 @@ def zenodo_records():
                 if not url:
                     break
                 params = None
-            if records:
-                # The general records endpoint can contain other communities
-                # if the filter is unsupported. Verify membership explicitly.
+            if records and endpoint.endswith("/api/records"):
+                # The general search requires an explicit community check.
                 records = [r for r in records if in_community(r)]
             if records:
                 return records
@@ -198,7 +197,7 @@ def format_paper(record, item):
     if pdf:
         lines.extend(["File-URL: " + pdf, "File-Format: Application/pdf"])
     lines.append("Handle: " + handle)
-    return handle, "\\n".join(lines)
+    return handle, "\n".join(lines)
 
 
 def load_existing(year):
@@ -206,15 +205,15 @@ def load_existing(year):
     if not path.exists():
         return {}
     result = {}
-    for block in re.split(r"\\n(?=Template-Type:)", path.read_text(encoding="utf-8").strip()):
-        m = re.search(r"^Handle: (RePEc:gvn:eprgwp:[^\\s]+)\\s*$", block, re.M)
+    for block in re.split(r"\n(?=Template-Type:)", path.read_text(encoding="utf-8").strip()):
+        m = re.search(r"^Handle: (RePEc:gvn:eprgwp:[^\s]+)\s*$", block, re.M)
         if m:
             result[m.group(1)] = block.strip()
     return result
 
 
 def write_index(years):
-    rows = "\\n".join(f'<li><a href="{year}.redif">{year} working papers</a></li>' for year in sorted(years, reverse=True))
+    rows = "\n".join(f'<li><a href="{year}.redif">{year} working papers</a></li>' for year in sorted(years, reverse=True))
     markup = ("""<!doctype html>
 <html lang="en"><head><meta charset="utf-8"><title>EPRG Working Papers - ReDIF</title></head>
 <body><h1>EPRG Working Paper Series - ReDIF metadata</h1>
@@ -250,7 +249,7 @@ def main():
     ARCHIVE.mkdir(parents=True, exist_ok=True)
     for year, blocks in sorted(per_year.items()):
         ordered = sorted(blocks.items(), key=lambda kv: kv[0], reverse=True)
-        (ARCHIVE / f"{year}.redif").write_text("\\n\\n".join(v for _, v in ordered) + "\\n", encoding="utf-8")
+        (ARCHIVE / f"{year}.redif").write_text("\n\n".join(v for _, v in ordered) + "\n", encoding="utf-8")
     years = [int(p.stem) for p in ARCHIVE.glob("20??.redif")]
     write_index(years)
     print(f"Matched {match_count} of {len(records)} published Zenodo community records")
