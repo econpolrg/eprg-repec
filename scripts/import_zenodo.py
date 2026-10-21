@@ -114,7 +114,7 @@ def paper_match(title, data):
 def is_placeholder_abstract(value):
     """Do not mislabel a Zenodo series placeholder as a paper abstract."""
     return bool(re.fullmatch(
-        r"eprg working paper series \\d+ 20\\d{2}",
+        r"eprg working paper series \d+ 20\d{2}",
         normalized(clean(value)),
     ))
 
@@ -220,7 +220,7 @@ def merge_curated(existing, generated):
                 len(new_lines),
             )
             new_lines.insert(insert_before, old_field)
-    return "\\n".join(new_lines)
+    return "\n".join(new_lines)
 
 
 def load_existing(year):
