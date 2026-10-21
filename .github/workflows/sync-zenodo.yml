@@ -1,0 +1,44 @@
+name: Import EPRG papers from Zenodo
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [main]
+    paths:
+      - 'scripts/import_zenodo.py'
+      - '.github/workflows/sync-zenodo.yml'
+
+permissions:
+  contents: write
+
+jobs:
+  import-zenodo:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          persist-credentials: true
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Install dependencies
+        run: pip install requests beautifulsoup4
+
+      - name: Fetch and convert published Zenodo records
+        run: python scripts/import_zenodo.py
+
+      - name: Commit updated ReDIF files
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add RePEc/gvn/eprgwp/
+          if ! git diff --cached --quiet; then
+            git commit -m "Synchronize EPRG RePEc metadata from Zenodo"
+            git push
+          else
+            echo "No metadata changes"
+          fi
