@@ -76,55 +76,31 @@ def catalogue():
 
 
 def zenodo_records():
-    errors = []
-    for endpoint in ZENODO_URLS:
-        try:
-            params = {"size": 100, "sort": "newest"}
-            if endpoint == "https://zenodo.org/api/records":
-                params["communities"] = "econpolrg"
-            url = endpoint
-            records = []
-            for _ in range(20):
-                response = SESSION.get(url, params=params, timeout=40)
-                response.raise_for_status()
-                payload = response.json()
-                batch = payload.get("hits", {}).get("hits", [])
-                records.extend(batch)
-                url = payload.get("links", {}).get("next")
-                if not url:
-                    break
-                params = None
-            if records and endpoint.endswith("/api/records"):
-                # The general search requires an explicit community check.
-                records = [r for r in records if in_community(r)]
-            if records:
-                return records
-            errors.append(f"{endpoint}: no published EPRG records returned")
-        except (requests.RequestException, ValueError, TypeError) as e:
-            errors.append(f"{endpoint}: {e}")
-    raise RuntimeError("Zenodo community could not be queried: " + "; ".join(errors))
+    """Fetch all published EPRG community records through the public Zenodo API.
 
-
-def in_community(record):
-    parent = record.get("parent") or {}
-    memberships = parent.get("communities") or record.get("metadata", {}).get("communities") or {}
-    if isinstance(memberships, dict):
-        vals = memberships.get("entries") or memberships.get("ids") or []
-        if isinstance(vals, dict):
-            vals = list(vals.keys()) + list(vals.values())
-    elif isinstance(memberships, list):
-        vals = memberships
-    else:
-        vals = []
-    names = []
-    for v in vals:
-        if isinstance(v, dict):
-            names.extend([v.get("id"), v.get("slug"), v.get("identifier")])
-        else:
-            names.append(v)
-    # The community-scoped endpoint already performs server-side filtering.
-    return "econpolrg" in [str(x).lower() for x in names if x is not None] or "communities/econpolrg/records" in (record.get("links", {}).get("self", "") or "")
-
+    The records API uses 'mostrecent', not the 'newest' value used in the
+    Zenodo web interface. Keep the anonymous page size at or below 25.
+    """
+    url = "https://zenodo.org/api/records"
+    params = {"communities": "econpolrg", "size": 20, "sort": "mostrecent"}
+    records = []
+    for page in range(50):
+        response = SESSION.get(url, params=params, timeout=40)
+        if not response.ok:
+            raise RuntimeError(
+                f"Zenodo API failed (page {page + 1}, HTTP {response.status_code}): "
+                + response.text[:1200]
+            )
+        payload = response.json()
+        records.extend(payload.get("hits", {}).get("hits", []))
+        url = payload.get("links", {}).get("next")
+        if not url:
+            break
+        params = None  # Zenodo's next link already includes pagination fields.
+    if not records:
+        raise RuntimeError("No published records returned for Zenodo community 'econpolrg'")
+    print(f"Found {len(records)} Zenodo community records", flush=True)
+    return records
 
 def paper_match(title, data):
     key = normalized(title)
