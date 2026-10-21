@@ -1,0 +1,9 @@
+Template-Type: ReDIF-Series 1.0
+Name: Economics and Politics Working Paper Series
+Description: Research working papers in economics, political economy, public policy, political science, law, and related disciplines, published by the Economics and Politics Research Group since 2013.
+Provider-Name: Economics and Politics Research Group (EPRG), University of Brasília
+Provider-Homepage: https://econpolrg.com/
+Maintainer-Name: Daniel Gersten Reiss
+Maintainer-Email: econpolrg@gmail.com
+Type: ReDIF-Paper
+Handle: RePEc:gvn:eprgwp
