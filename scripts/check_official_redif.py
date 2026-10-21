@@ -26,5 +26,6 @@ for path in files:
     if marker >= 0:
         text = text[marker:]
     print("HTTP", response.status_code, "RESULT:", text[:3000], flush=True)
-    position = response.text.find("First error/warning line")
-    print("HTML NEAR WARNING:", response.text[max(0, position-2500):position+6000], flush=True)
+    raw = response.text
+    print("RAW_LENGTH", len(raw))
+    print("RAW_BODY_END", raw[-23000:], flush=True)
