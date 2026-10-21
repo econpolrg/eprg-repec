@@ -80,7 +80,7 @@ def zenodo_records():
     for endpoint in ZENODO_URLS:
         try:
             params = {"size": 100, "sort": "newest"}
-            if endpoint.endswith("/records"):
+            if endpoint == "https://zenodo.org/api/records":
                 params["communities"] = "econpolrg"
             url = endpoint
             records = []
