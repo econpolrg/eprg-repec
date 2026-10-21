@@ -6,6 +6,7 @@ Author-Name: Mauricio Bugarin
 Author-Name-First: Mauricio
 Author-Name-Last: Bugarin
 Title: Promoção da Concorrência em Leilões de Espectro: Uma Análise de Mecanismos com Direito de Preferência para Entrantes
+Abstract: Este artigo analisa como diferentes formatos de leilões de espectro afetam três objetivos regulatórios centrais: arrecadação, eficiência alocativa e promoção da entrada. Combinando modelagem teórica e simulações de Monte Carlo, comparam-se dois benchmarks clássicos (SPA e FPA) e quatro mecanismos regulatórios, incluindo propostas inovadoras com direito de preferência para entrantes. Os resultados revelam que mecanismos híbridos com reserva endógena e direito de preferência superam alternativas tradicionais, conciliando metas de arrecadação e inclusão competitiva. Entre eles, o Mecanismo D aproxima-se da fronteira eficiente em termos de receita e alocação, enquanto o Mecanismo C maximiza a entrada com perdas moderadas de arrecadação. Em contraste, formatos baseados apenas em exclusão de incumbentes (set-asides) apresentam desempenho frágil, sobretudo sob assimetria. Ao quantificar esses trade-offs, o estudo oferece subsídios práticos para reguladores e contribui para o debate sobre desenho ótimo de leilões em mercados concentrados, apontando caminhos para políticas públicas que promovam concorrência sem comprometer eficiência e arrecadação.
 Creation-Date: 2025-12-16
 Number: 122/2025
 Keywords: Leilões de espectro, Teoria dos leilões, Direito de preferência, regulação econômica, inclusão digital
