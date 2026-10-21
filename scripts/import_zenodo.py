@@ -111,12 +111,25 @@ def paper_match(title, data):
     return item if score >= 0.90 else None
 
 
+def is_placeholder_abstract(value):
+    """Do not mislabel a Zenodo series placeholder as a paper abstract."""
+    return bool(re.fullmatch(
+        r"eprg working paper series \\d+ 20\\d{2}",
+        normalized(clean(value)),
+    ))
+
+
 def author_lines(creator):
     info = creator.get("person_or_org") or creator
     name = clean(info.get("name") or "")
     given = clean(info.get("given_name") or "")
     family = clean(info.get("family_name") or "")
-    if not name:
+    if given and family:
+        # Some Zenodo creators have their surname in both name parts.
+        if normalized(given).endswith(normalized(family)):
+            given = given[: -len(family)].rstrip()
+        name = (given + " " + family).strip()
+    elif not name:
         name = (given + " " + family).strip()
     if "," in name and not (given and family):
         family, given = (part.strip() for part in name.split(",", 1))
@@ -154,7 +167,7 @@ def format_paper(record, item):
         raise ValueError(f"No authors found for {metadata.get('title')}")
     lines.append("Title: " + clean(metadata.get("title") or item["title"]))
     abstract = clean(metadata.get("description"))
-    if abstract:
+    if abstract and not is_placeholder_abstract(abstract):
         lines.append("Abstract: " + abstract)
     date = item["date"] or str(metadata.get("publication_date") or "")[:10]
     if date:
@@ -174,6 +187,40 @@ def format_paper(record, item):
         lines.extend(["File-URL: " + pdf, "File-Format: Application/pdf"])
     lines.append("Handle: " + handle)
     return handle, "\n".join(lines)
+
+
+def merge_curated(existing, generated):
+    """Preserve reviewed ReDIF author names, affiliations and JEL codes.
+
+    DOI, title, dates and file URLs may be refreshed from Zenodo. A missing
+    or placeholder Zenodo abstract never deletes a genuine previous abstract.
+    """
+    if not existing:
+        return generated
+    old_lines = existing.splitlines()
+    new_lines = generated.splitlines()
+    saved_authors = [line for line in old_lines if line.startswith("Author-")]
+    if saved_authors:
+        new_lines = [line for line in new_lines if not line.startswith("Author-")]
+        new_lines[1:1] = saved_authors
+    for field in ("Classification-JEL", "Keywords", "Abstract"):
+        old_field = next(
+            (line for line in old_lines if line.startswith(field + ": ")), None
+        )
+        new_field = next(
+            (line for line in new_lines if line.startswith(field + ": ")), None
+        )
+        if field == "Abstract" and old_field and is_placeholder_abstract(
+            old_field.partition(": ")[2]
+        ):
+            old_field = None
+        if old_field and not new_field:
+            insert_before = next(
+                (i for i, line in enumerate(new_lines) if line.startswith("Handle: ")),
+                len(new_lines),
+            )
+            new_lines.insert(insert_before, old_field)
+    return "\\n".join(new_lines)
 
 
 def load_existing(year):
@@ -217,7 +264,7 @@ def main():
         year = item["year"]
         if year not in per_year:
             per_year[year] = load_existing(year)
-        per_year[year][handle] = template
+        per_year[year][handle] = merge_curated(per_year[year].get(handle), template)
         match_count += 1
         print(f"MATCH {item['number']}/{year}: {title} -> {handle}")
     if not match_count:
