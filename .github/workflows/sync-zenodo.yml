@@ -10,6 +10,7 @@ on:
     branches: [main]
     paths:
       - 'scripts/import_zenodo.py'
+      - 'metadata/abstract_overrides.json'
       - 'scripts/validate_repec.py'
       - '.github/workflows/sync-zenodo.yml'
 
