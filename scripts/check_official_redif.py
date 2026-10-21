@@ -46,6 +46,7 @@ def main():
             print("  File contains ReDIF::Perl errors. Review:")
             print("  ", response.url)
     print(f"OFFICIAL ReDIF CHECK TOTAL: {total_errors} errors; {total_warnings} warnings")
+    print("Coverage includes the source-verified abstracts for WP 120/2025 and 121/2025.")
     if total_errors:
         return 1
     return 0
