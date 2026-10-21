@@ -6,11 +6,11 @@ Author-Workplace-Name: Central Bank of Brazil and University of Brasília
 Title: Selective Conscription: Sequential Allocation under Incomplete Information in Brazil's Military Recruitment and Retention System
 Creation-Date: 2026-09-22
 Number: 125/2026
-Keywords: conscription, military manpower, screening, incomplete information, regression discontinuity, Brazil, H56, D82, J24, J45, D86
+Classification-JEL: H56, D82, J24, J45, D86
+Keywords: conscription, military manpower, screening, incomplete information, regression discontinuity, Brazil
 DOI: 10.5281/zenodo.23484449
 File-URL: https://zenodo.org/api/records/23484449/files/eprg-wp-2026-125.pdf/content
 File-Format: Application/pdf
-Classification-JEL: H56, D82, J24, J45, D86
 Abstract: The value of military service is often learned only through experience, yet initial selection into service must occur before that experience takes place. This creates a tension at the heart of every selective conscription system: the military must allocate positions among a large pool of potential recruits under imperfect information about both aptitude and preferences. Brazil, which registers over 1.5 million young men each year but incorporates only about 5 percent, is one of the largest selective systems in the world. Yet no formal framework models this process as a sequential allocation mechanism. This paper develops such a model, combining centralized screening, capacity constrained selection by military organizations, and post-service learning through reenlistment. Two results follow. First, the interaction between screening and capacity constraints endogenously generates local quasi-random assignment at the selection margin, providing an institutional micro-foundation for regression-discontinuity identification without requiring an explicit lottery. Second, when preferences are learned through experience, conditioning initial selection on stated willingness to serve is suboptimal for the formation of a high-quality retained force. As hybrid voluntary-mandatory designs return to the European policy agenda, these results offer analytical building blocks for the reform of conscription systems under uncertainty.
 Handle: RePEc:gvn:eprgwp:1252026
 
@@ -22,9 +22,10 @@ Author-Name: Antonio Bruno de Carvalho Morales
 Author-Name-First: Antonio Bruno de
 Author-Name-Last: Carvalho Morales
 Title: Litigation as a "win-win" game: A Theoretical Perspective and Empirical Evidence from Brazilian Labor Courts
-Creation-Date: 2026-09-08
+Creation-Date: 2026-08-09
 Number: 124/2026
-Keywords: litigation, settlement, labor courts, repeated games, reputation, risk aversion, text mining, K41, C72, C73, J52, K31
+Classification-JEL: K41, C72, C73, J52, K31
+Keywords: litigation, settlement, labor courts, repeated games, reputation, risk aversion, text mining
 DOI: 10.5281/zenodo.23484849
 File-URL: https://zenodo.org/api/records/23484849/files/eprg-wp-2026-124.pdf/content
 File-Format: Application/pdf

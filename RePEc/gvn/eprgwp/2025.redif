@@ -8,12 +8,25 @@ Author-Name-Last: Bugarin
 Title: Promoção da Concorrência em Leilões de Espectro: Uma Análise de Mecanismos com Direito de Preferência para Entrantes
 Creation-Date: 2025-12-16
 Number: 122/2025
-Keywords: regulação econômica, inclusão digital, D44, L96, L51, leilões de espectro, teoria dos leilões, direito de preferência
+Classification-JEL: D44, L96, L51
+Keywords: regulação econômica, inclusão digital, leilões de espectro, teoria dos leilões, direito de preferência
 DOI: 10.5281/zenodo.23536566
 File-URL: https://zenodo.org/api/records/23536566/files/eprg-wp-2025-122.pdf/content
 File-Format: Application/pdf
 Abstract: Este artigo analisa como diferentes formatos de leilões de espectro afetam três objetivos regulatórios centrais: arrecadação, eficiência alocativa e promoção da entrada. Combinando modelagem teórica e simulações de Monte Carlo, comparam-se dois benchmarks clássicos (SPA e FPA) e quatro mecanismos regulatórios, incluindo propostas inovadoras com direito de preferência para entrantes. Os resultados revelam que mecanismos híbridos com reserva endógena e direito de preferência superam alternativas tradicionais, conciliando metas de arrecadação e inclusão competitiva. Entre eles, o Mecanismo D aproxima-se da fronteira eficiente em termos de receita e alocação, enquanto o Mecanismo C maximiza a entrada com perdas moderadas de arrecadação. Em contraste, formatos baseados apenas em exclusão de incumbentes (set-asides) apresentam desempenho frágil, sobretudo sob assimetria. Ao quantificar esses trade-offs, o estudo oferece subsídios práticos para reguladores e contribui para o debate sobre desenho ótimo de leilões em mercados concentrados, apontando caminhos para políticas públicas que promovam concorrência sem comprometer eficiência e arrecadação.
 Handle: RePEc:gvn:eprgwp:1222025
+
+Template-Type: ReDIF-Paper 1.0
+Author-Name: Roberto Aragão Neto
+Author-Name-First: Roberto
+Author-Name-Last: Aragão Neto
+Title: Mayors within Electoral or Legislative Coalitions? Pre-Electoral Agreements in Brazilian Municipal Legislatures
+Creation-Date: 2025-11-21
+Number: 121/2025
+DOI: 10.5281/zenodo.23537234
+File-URL: https://zenodo.org/api/records/23537234/files/eprg-wp-2025-121.pdf/content
+File-Format: Application/pdf
+Handle: RePEc:gvn:eprgwp:1212025
 
 Template-Type: ReDIF-Paper 1.0
 Author-Name: Guilherme Paiva Pinto
@@ -26,10 +39,10 @@ Author-Name: Rodrigo Schneider
 Author-Name-First: Rodrigo
 Author-Name-Last: Schneider
 Title: Politics and Public Banks: BNDES Loans to Local Governments in Brazil
-Abstract: Economics and Politics Working Paper 120/2025
 Creation-Date: 2025-06-26
 Number: 120/2025
-Keywords: development banks, political economy, intergovernmental transfers, Brazil, regression discontinuity design, partisan alignment, H77, G21, D72, H81
+Classification-JEL: H77, G21, D72, H81
+Keywords: development banks, political economy, intergovernmental transfers, Brazil, regression discontinuity design, partisan alignment
 DOI: 10.5281/zenodo.23541645
 File-URL: https://zenodo.org/api/records/23541645/files/eprg-wp-2025-120.pdf/content
 File-Format: Application/pdf
