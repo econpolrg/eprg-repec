@@ -250,6 +250,18 @@ def write_index(years):
 def main():
     catalog = catalogue()
     records = zenodo_records()
+    for rec in records:
+        meta = rec.get("metadata") or {}
+        files = rec.get("files") or {}
+        if isinstance(files, dict):
+            names = list((files.get("entries") or {}).keys())
+        else:
+            names = [f.get("key") or f.get("filename") for f in files]
+        print("AUDIT ZENODO:", rec.get("id"),
+              "title=", clean(meta.get("title")),
+              "files=", names,
+              "keywords=", meta.get("keywords", []),
+              "description=", clean(meta.get("description", ""))[:100], flush=True)
     per_year = {}
     match_count = 0
     misses = []
