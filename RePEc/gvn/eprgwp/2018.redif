@@ -1,0 +1,237 @@
+Template-Type: ReDIF-Paper 1.0
+Author-Name: Rodrigo Schneider
+Author-Name-First: Rodrigo
+Author-Name-Last: Schneider
+Author-Name: Diloá Athias
+Author-Name-First: Diloá
+Author-Name-Last: Athias
+Author-Name: Maurício Soares Bugarin
+Author-Name-First: Maurício Soares
+Author-Name-Last: Bugarin
+Title: Electronic voting and Public Spending: The impact of enfranchisement on federal budget amendments in Brazil
+Abstract: This article examines whether an increase in political participation biased toward low-income voters, and concentrated in legislative elections, impacts federal representatives' allocation of resources from the federal budget. We use a regression discontinuity design that exploits the assignment to electronic voting based on population size in Brazil to identify the causal effect of enfranchisement on allocation of public spending. We find that an increase of 1 percentage point in the valid vote to turnout ratio for federal representatives increases the allocation of funds from the federal budget in 4.2%, and that experienced politicians are more responsive to the enfranchisement of low-income voters.
+Creation-Date: 2018-12-10
+Number: 93/2018
+Classification-JEL: C21, D72, D78, E62
+Keywords: Electronic voting, political participation, politically motivated transfers
+DOI: 10.5281/zenodo.23594791
+File-URL: https://zenodo.org/api/records/23594791/files/eprg-wp-2018-93.pdf/content
+File-Format: Application/pdf
+Handle: RePEc:gvn:eprgwp:932018
+
+Template-Type: ReDIF-Paper 1.0
+Author-Name: Carlos Alberto Cascão Júnior
+Author-Name-First: Carlos Alberto
+Author-Name-Last: Cascão Júnior
+Author-Name: Adriana Cuoco Portugal
+Author-Name-First: Adriana Cuoco
+Author-Name-Last: Portugal
+Author-Name: Maurício Soares Bugarin
+Author-Name-First: Maurício Soares
+Author-Name-Last: Bugarin
+Author-Name: Flávia Ceccato Cunha
+Author-Name-First: Flávia Ceccato
+Author-Name-Last: Cunha
+Title: Aplicação da Lei de Benford na Detecção de Jogo de Planilha: O Caso do Estádio Nacional de Brasília
+Abstract: Este trabalho apresenta a aplicação do algoritmo da Lei de Benford, previsto na Cartilha de Benford publicada pelo IBRAOP, para caracterizar a ocorrência de "jogo de planilha" na execução do contrato de construção do Estádio Nacional de Brasília. Para tanto, compara-se a metodologia baseada na Curva ABC, tradicionalmente utilizada nos Tribunais de Contas, com a nova metodologia proposta. A análise baseada na Lei de Benford mostra que tanto o orçamento de referência como o contrato inicial apresentam conformidade com a Lei, o que sugere ausência de manipulação de dados nessas etapas do processo licitatório. Por outro lado, os testes indicam elevada não-conformidade à Lei de Benford quando é considerada a planilha final, após a inclusão de 28 aditivos. A não-conformidade reforça suspeita quanto ao "jogo de planilha", o que foi robustecido pelo fato de a nova metodologia indicar, em sua maioria, os mesmos serviços apontados pela análise tradicional, mantendo a vantagem declarada na Cartilha do Ibraop de não ser necessário agrupar serviços de mesma natureza, como na análise baseada em Curva ABC, otimizando a atividade de auditoria.
+Creation-Date: 2018-12-04
+Number: 92/2018
+Keywords: jogo de planilha, Lei de Benford, auditoria
+DOI: 10.5281/zenodo.23594788
+File-URL: https://zenodo.org/api/records/23594788/files/eprg-wp-2018-92.pdf/content
+File-Format: Application/pdf
+Handle: RePEc:gvn:eprgwp:922018
+
+Template-Type: ReDIF-Paper 1.0
+Author-Name: Bernardo Mueller
+Author-Name-First: Bernardo
+Author-Name-Last: Mueller
+Title: Where'd You Get that Idea? Determinants of Creativity and Impact in Popular Music
+Abstract: What are the determinants of creativity, innovation and impact? In this paper I explore this question through an analysis of data from the Song Explorer podcast, where composers describe how they created a specific song. I mine their accounts to classify their processes into seven different, but not mutually exclusive, theories of the creative process. The result of this exercise suggests that the recombination of existing songs is a major process for the creation of new successful songs. The second step considers what kind of recombinations are associated with high impact. For each song in the sample I have one or more other songs which were explicitly indicated as an influence or inspiration. I use the music genre classification system Every Noise at Once, that provides a map of over 1,800 genres and millions of songs to create a set of descriptive statistics of the similarity of each song to their inspiration-songs. These statistics are then used as explanatory variables in a regression that seeks to explain impact (YouTube views per day since the songs` video release), while controlling for other determinants of song impact, such as the artists' established level of popularity. The results confirm the optimal differentiation hypothesis that the simultaneous presence of conventionality together with novelty, and not just one or the other, is a major determinant of creativity and impact.
+Creation-Date: 2018-11-21
+Number: 91/2018
+Classification-JEL: D16
+Keywords: popular music, creativity, impact, innovation, O3, Z1, D7
+DOI: 10.5281/zenodo.23594775
+File-URL: https://zenodo.org/api/records/23594775/files/eprg-wp-2018-91v2.pdf/content
+File-Format: Application/pdf
+Handle: RePEc:gvn:eprgwp:912018
+
+Template-Type: ReDIF-Paper 1.0
+Author-Name: Marcos Nihari
+Author-Name-First: Marcos
+Author-Name-Last: Nihari
+Author-Name: Vander Mendes Lucas
+Author-Name-First: Vander Mendes
+Author-Name-Last: Lucas
+Title: A Previdência Complementar é, de fato, Complementar?
+Abstract: Due to the deficit in the retirement accounts, pension reforms are discussed in many countries. However, most countries consider reforms that seek to extend working years, reduce the value of retirement or increase social security contribution rates. Just a few countries implemented a transition from the pay-as-you-go to the fully-funded system. In this sense, it is useful to analyse if the fully-funded system, which is characteristic of private pensions, is substitute or complementary to the pay-as-you-go system, which is characteristic of social security. If they are perceived as substitutes, then there is an opportunity for future pension reforms to implement a system transition. With this questioning and using Brazilian data, this work obtains strong evidence that these forms of pension are perceived as substitutes, with substitution rates varyng from 8.15% to 18.0%. For this reason, there is space for future social security reforms to propose a change in the way that pensions are financed instead of just changing the parameters of current systems.
+Creation-Date: 2018-11-12
+Number: 90/2018
+Keywords: Complementaridade, Previdência Privada, Previdência Social, Seguridade Social, Substituibilidade, Complementarity, Private Pension Plan, Social Security, Substitutability
+DOI: 10.5281/zenodo.23594768
+File-URL: https://zenodo.org/api/records/23594768/files/eprg-wp-2018-90.pdf/content
+File-Format: Application/pdf
+Handle: RePEc:gvn:eprgwp:902018
+
+Template-Type: ReDIF-Paper 1.0
+Author-Name: Nelson Gonçalves Gomes
+Author-Name-First: Nelson Gonçalves
+Author-Name-Last: Gomes
+Title: Sobre Falácias de Moro
+Creation-Date: 2018-11-05
+Number: 89/2018
+DOI: 10.5281/zenodo.23594766
+File-URL: https://zenodo.org/api/records/23594766/files/eprg-wp-2018-89.pdf/content
+File-Format: Application/pdf
+Handle: RePEc:gvn:eprgwp:892018
+
+Template-Type: ReDIF-Paper 1.0
+Author-Name: João Paulo de Castro Carisio Ribeiro
+Author-Name-First: João Paulo de Castro Carisio
+Author-Name-Last: Ribeiro
+Author-Name: Marcelo Driemeyer Wilbert
+Author-Name-First: Marcelo Driemeyer
+Author-Name-Last: Wilbert
+Author-Name: Samuel de Resende Salgado
+Author-Name-First: Samuel de Resende
+Author-Name-Last: Salgado
+Title: Eficiência financeira das concessões de aeroportos no Brasil no período de 2015 a 2016
+Abstract: Em um contexto de crescimento do transporte aéreo brasileiro, de insuficiência de recursos públicos e da necessidade de melhoria na infraestrutura dos aeroportos para suportar a demanda crescente, o governo brasileiro autorizou e realizou as concessões de aeroportos. O presente trabalho tem como objetivo avaliar a eficiência financeira das concessões aeroportuárias no Brasil, por meio da análise por envoltória de dados no período de 2015 e 2016 para os seis aeroportos concedidos até o ano de 2016, bem como incluiu a Infraero para fins de comparação. As variáveis utilizadas como insumo foram investimentos, despesas e movimentação de passageiros e como produto foi utilizado o resultado do exercício. Para melhor compreensão do cenário recente das concessões aeroportuárias, foi analisado o período de 2013 a 2016 por meio de estatística descritiva. Os resultados encontrados apontam três aeroportos eficientes, sendo dois (Confins e Natal) com eficiência máxima e três com eficiência baixa. O resultado mostra também que não existe um padrão para as concessões com eficiência alta e as de baixa eficiência.
+Creation-Date: 2018-10-29
+Number: 88/2018
+Keywords: Eficiência, Concessão, Aeroportos
+DOI: 10.5281/zenodo.23594749
+File-URL: https://zenodo.org/api/records/23594749/files/eprg-wp-2018-88.pdf/content
+File-Format: Application/pdf
+Handle: RePEc:gvn:eprgwp:882018
+
+Template-Type: ReDIF-Paper 1.0
+Author-Name: Hélio Mauricio Miranda Fonseca
+Author-Name-First: Hélio Mauricio Miranda
+Author-Name-Last: Fonseca
+Author-Name: Maurício Soares Bugarin
+Author-Name-First: Maurício Soares
+Author-Name-Last: Bugarin
+Title: Leilões para conversão de dívida em investimento: Uma proposta da teoria de leilões para implantação dos Termos de Ajuste de Conduta (TAC) da ANATEL
+Abstract: Desde a privatização da TELEBRÁS em 1998, o Brasil tem assistido a uma impressionante expansão nas telecomunicações. Paralelamente, cresceram assustadoramente as dívidas das operadoras de telecomunicação, com multas cada vez mais elevadas aplicadas pelo regulador. Diante da severidade do problema, a ANATEL aprovou em 2012 a possibilidade de as operadoras celebrarem termos de ajustamento de conduta (TAC) com o órgão regulador para converter dívida em projetos de investimento. A questão crucial é como será determinada a taxa de conversão. Este trabalho lança mão da Teoria dos Leilões para construir mecanismos para a determinação ótima dessa taxa. Após descrever o processo sancionatório na ANATEL, este trabalho analisa a formulação e tramitação dos TAC e discute a literatura pertinente. Passa em seguida para sua parte propositiva, desenvolvendo um modelo formal de leilão a ser usado para a determinação da taxa de conversão. Por meio do mecanismo de leilão, a taxa de conversão passa a ser determinada endógena e objetivamente pela competição entre as concessionárias pelo benefício do desconto. O texto analisa, em seguida, o papel de uma limitação à taxa de desconto, correspondendo ao conceito preço de reserva no caso de um leilão tradicional, mostrando como essa limitação pode melhorar os termos da conversão para o governo. Finalmente, este trabalho discute como a estrutura sequencial do problema permite a construção de um mecanismo inédito de dois leilões sequenciais que tem a seguinte característica. O mecanismo cria assimetria entre os jogadores no segundo leilão ao oferecer uma vantagem competitiva ao vencedor do primeiro leilão. Essa assimetria gera um forte incentivo para que todos os jogadores aumentem seus lances na primeira. Espera-se, com base na literatura recente referenciada, que o novo mecanismo gere maior bem-estar social que os modelos clássicos de leilões, ao tempo em que garante a implementação dos projetos selecionados.
+Creation-Date: 2018-10-19
+Number: 87/2018
+Keywords: Telecomunicações, TAC, Conversão de dívida em investimento
+DOI: 10.5281/zenodo.23594731
+File-URL: https://zenodo.org/api/records/23594731/files/eprg-wp-2018-87.pdf/content
+File-Format: Application/pdf
+Handle: RePEc:gvn:eprgwp:872018
+
+Template-Type: ReDIF-Paper 1.0
+Author-Name: Maurício Soares Bugarin
+Author-Name-First: Maurício Soares
+Author-Name-Last: Bugarin
+Title: Redistribution in Contemporary Japan: A Political Economy Analysis of Ide, Furuichi and Miyazaki (2016)'s "All for All" Fiscal Reform Proposal
+Abstract: This paper builds a political economy model to analyze Ide, Furuichi and Miyazaki (2016)'s "All for All" fiscal reform proposal. The main finding of the electoral competition equilibrium is that the stylized implementation of the proposal will likely increase Japan's already huge fiscal deficit and that it will only appease social cleavage, if the psychological feeling of equal treatment is large enough to compensate the poor citizen's utility loss. In that case, the equal-treatment feeling will compensate the loss due to a smaller provision of the previously targeted public services provision, to the poor, as well as the increased cost of universalizing, to the well-off. This gives a political economy foundation to Ide, Furuichi and Miyazaki (2016)'s fiscal reform proposal. On the other hand, if such psychological feeling is not high enough, then, under reasonable conditions, both the poor and the well-off will be dissatisfied with such a policy. This paper's findings relate to the contemporary discussion on universal basic income and on the targeting-versus-universal-policy debate.
+Creation-Date: 2018-10-08
+Number: 86/2018
+DOI: 10.5281/zenodo.23594717
+File-URL: https://zenodo.org/api/records/23594717/files/eprg-wp-2018-86.pdf/content
+File-Format: Application/pdf
+Handle: RePEc:gvn:eprgwp:862018
+
+Template-Type: ReDIF-Paper 1.0
+Author-Name: Marcos Lima Bandeira
+Author-Name-First: Marcos Lima
+Author-Name-Last: Bandeira
+Author-Name: Paulo Augusto Pettenuzzo de Britto
+Author-Name-First: Paulo Augusto Pettenuzzo
+Author-Name-Last: de Britto
+Author-Name: André Luiz Marques Serrano
+Author-Name-First: André Luiz Marques
+Author-Name-Last: Serrano
+Title: Gestão Fiscal e Despesa de Pessoal: Análise dos Gastos Públicos Estaduais entre 2008 e 2016
+Abstract: Ao longo dos anos o gasto público tem se elevado em termos significativos, principalmente no que se refere às despesas com pagamento de pessoal, levandose à necessidade de mudanças significativas nas regras e limites específicos para as despesas com pessoal, com o intuito de equilibrar as contas públicas. O aumento da participação dos gastos com pessoal sobre as receitas públicas é um componente em destaque, o que torna imprescindível conhecer o comportamento desse tipo de despesa e sua relação com variáveis de receitas. Dessa forma, este estudo visa analisar a relação entre indicadores de estrutura de receitas e os gastos com pessoal dos governos estaduais, no âmbito do Poder Executivo, entre os anos de 2008 e 2016. Por intermédio de uma pesquisa quantitativa, com a utilização de um modelo econométrico para dados em painel, buscou-se averiguar indicadores de receita que influenciam a evolução das despesas com pessoal, com base no quociente Despesa com Pessoal pela Receita Corrente Líquida (DP/RCL) instituído pela Lei de Responsabilidade Fiscal. Os resultados demonstraram que as variáveis TRP (Quociente Transferências Federais/Receitas Próprias) e CCP (Quociente Receitas Tributárias mais Imposto sobre Circulação de Mercadorias e Serviços/ Despesas Correntes) relacionam-se de forma inversa à evolução das despesas com pessoal, uma vez que o aumento daquelas variáveis decresce o indicador DP/RCL; e o índice ICMS (Quociente Imposto sobre Circulação de Mercadorias e Serviços/ Receita Total) contribui de forma direta no DP/RCL, ou seja, o incremento desse índice se associa positivamente com a elevação das despesas com pessoal.
+Creation-Date: 2018-08-08
+Number: 85/2018
+DOI: 10.5281/zenodo.23594713
+File-URL: https://zenodo.org/api/records/23594713/files/eprg-wp-2018-85.pdf/content
+File-Format: Application/pdf
+Handle: RePEc:gvn:eprgwp:852018
+
+Template-Type: ReDIF-Paper 1.0
+Author-Name: Débora Costa Ferreira
+Author-Name-First: Débora Costa
+Author-Name-Last: Ferreira
+Author-Name: Fernando B. Meneguin
+Author-Name-First: Fernando B.
+Author-Name-Last: Meneguin
+Author-Name: Maurício Soares Bugarin
+Author-Name-First: Maurício Soares
+Author-Name-Last: Bugarin
+Title: Atuação do poder legislativo estadual: análise dos incentivos dos deputados estaduais na atividade legislativa
+Abstract: While ministers of Brazilian Supreme Court have been sympathetic to US theories suggesting broad benefits for expanding the competencies of subnational entities, empirical studies show legislative assemblies to be inefficient in producing laws that carry positive impact to society. In that context, this paper analyzes the incentives' structure that influences the state or district deputies at the moment of proposing bills, by means of an economic model, which leads to the conclusion that the current institutional design of states' institutions has generated incentives for these agents to produce particularistic, irrelevant and/or unconstitutional laws. From the analysis, it is concluded that there is no effectiveness in expanding the constitutional attributions of state deputies if they do not have the technical competence in the elaboration of laws and public policies that improve the welfare of society as a whole or to carry out inspection activities and if control of constitutionality of state laws is not effective. If these conditions are present and as long as this list of constitutional powers of the deputies is not sufficiently expanded, the supervisory function is the alternative that maximizes social welfare.
+Creation-Date: 2018-07-11
+Number: 84/2018
+Keywords: Análise Econômica do Direito, Federalismo, Autonomia federativa, Processo legislativo estadual, Incentivos dos deputados, Economic Analysis of Law, Federalism, Federative autonomy, State legislative process, Incentives of State representatives
+DOI: 10.5281/zenodo.23594691
+File-URL: https://zenodo.org/api/records/23594691/files/eprg-wp-2018-84.pdf/content
+File-Format: Application/pdf
+Handle: RePEc:gvn:eprgwp:842018
+
+Template-Type: ReDIF-Paper 1.0
+Author-Name: Rafael M. Gomes
+Author-Name-First: Rafael M.
+Author-Name-Last: Gomes
+Author-Name: Roberto Aragão Neto
+Author-Name-First: Roberto
+Author-Name-Last: Aragão Neto
+Author-Name: Maurício Soares Bugarin
+Author-Name-First: Maurício Soares
+Author-Name-Last: Bugarin
+Author-Name: André L. Gama
+Author-Name-First: André L.
+Author-Name-Last: Gama
+Title: Eficiência, atratividade e dissuasão de acordos de leniência e combate à corrupção: o caso da Operação Lava-Jato
+Abstract: This paper uses game theory to build additional tools for those who work with leniency policy on calculating sanctions imposed to lenient firms from cartels involved in public biddings, under Brazilian legislation. The main characteristic of this analysis is modelling the State as a player who not only designs the mechanism of the leniency program but is also the most affected by the cartel, and is especially interested at imposing due sanctions. Thus, we show how to harmonize the attractiveness of leniency and its advantage to the State keeping the focus on the deterrence effect. We find that, under certain conditions, leniency policies stop being an impunity factor and become a useful tool for fighting corruption. However, the paper shows that the formula to calculate fines currently adopted by the State makes it harder to meet these conditions.
+Creation-Date: 2018-07-04
+Number: 83/2018
+Keywords: Leniência, Cartel, Multa, Teoria dos jogos, Operação Lava-Jato, Leniency, Fine, Game theory, "Car-Wash" Operation
+DOI: 10.5281/zenodo.23594676
+File-URL: https://zenodo.org/api/records/23594676/files/eprg-wp-2018-83.pdf/content
+File-Format: Application/pdf
+Handle: RePEc:gvn:eprgwp:832018
+
+Template-Type: ReDIF-Paper 1.0
+Author-Name: Tiago Pereira
+Author-Name-First: Tiago
+Author-Name-Last: Pereira
+Author-Name: Moisés de Andrade Resende Filho
+Author-Name-First: Moisés de Andrade
+Author-Name-Last: Resende Filho
+Author-Name: Vander Mendes Lucas
+Author-Name-First: Vander Mendes
+Author-Name-Last: Lucas
+Title: Ciclos Políticos e Eleitorais na Execução do Programa Bolsa Família em Nível Municipal
+Abstract: We investigate under the municipal perspective if political and electoral cycles occur in the Bolsa Família Program (PBF) execution. As the local governments play a crucial role in the PBF's provision of resources either guaranteeing and monitoring conditionalities or registering families in the program, we develop a social welfare theoretical model in which the incumbent mayor takes the problem of representative resident and sets the municipal supply function of Bolsa Família (BF). We estimate this supply function using panel data models with municipality fixed effects and year fixed effects by region. Our estimates show that mayors behave strategically by increasing the provision of BF during electoral years between 2.6% and 144%, depending on the region. We found North, Center-West and Northeast regions have intensities of electoral cycles above the estimate for Brazil and Southeast and South regions, below. This result may be because of the bigger information asymmetry among voters and the incumbent mayor, for instance, because residents of North, Center-West and Northwest regions are much less interested in monitoring and collecting information on politicians' performance than residents of the Southeast and South. Finally, the effects of the political cycles, those resulting from the partisan alignment of the mayor with the governor and president, were much less important for the implementation of the PBF than those of the electoral cycles.
+Creation-Date: 2018-06-28
+Number: 82/2018
+Classification-JEL: C23, H77, I38
+Keywords: ciclos políticos e eleitorais, Programa Bolsa Família, political and electoral cycles, Bolsa Família Program, local government
+DOI: 10.5281/zenodo.23594664
+File-URL: https://zenodo.org/api/records/23594664/files/eprg-wp-2018-82v2.pdf/content
+File-Format: Application/pdf
+Handle: RePEc:gvn:eprgwp:822018
+
+Template-Type: ReDIF-Paper 1.0
+Author-Name: Nathanael Pereira Costa
+Author-Name-First: Nathanael Pereira
+Author-Name-Last: Costa
+Author-Name: Vander Mendes Lucas
+Author-Name-First: Vander Mendes
+Author-Name-Last: Lucas
+Title: Análise do IBS como Proposta de Reforma Tributária. Um Estudo Aplicado de Equilíbrio Geral Computável
+Abstract: This paper seeks to analyze the recent tax reform proposal of Goods and Services Tax (IBS), elaborated by the Centro de Cidadania Fiscal. This proposal consists of replacing the main taxes on consumption (ICMS, ISS, IPI, PIS/Cofins cumulative and non cumulative) by a single Value Added Tax on Goods and Services (IBS). For analysis of the reform will be used a Computable General Equilibrium (CGE) methodology, modelled in Excel for the Brazilian economy of 2010. The results presented a considerable reduction in the prices of the sectorial production and a consequent increase of the production, evidencing that the simplification generated by the reform would have less distorting effect on the economy and a consequent increase of productivity. The ideal aliquot found for IBS that would maintain the current tax collection was 15.23%.
+Creation-Date: 2018-06-20
+Number: 81/2018
+Keywords: Reforma Tributária, Imposto sobre Bens e Serviços, Equilíbrio Geral Computável
+DOI: 10.5281/zenodo.23594640
+File-URL: https://zenodo.org/api/records/23594640/files/eprg-wp-2018-81v3.pdf/content
+File-Format: Application/pdf
+Handle: RePEc:gvn:eprgwp:812018

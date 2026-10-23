@@ -1,0 +1,125 @@
+Template-Type: ReDIF-Paper 1.0
+Author-Name: Fernando B. Meneguin
+Author-Name-First: Fernando B.
+Author-Name-Last: Meneguin
+Author-Name: Tomás T. S. Bugarin
+Author-Name-First: Tomás T. S.
+Author-Name-Last: Bugarin
+Title: O dilema entre a eficiência de curto e de longo prazo no ordenamento jurídico e o impacto no crescimento econômico
+Abstract: As normas devem potencializar os ganhos esperados e diminuir a extensão dos efeitos indesejados. Neste artigo, o objetivo é discutir a eficiência da legislação numa perspectiva intertemporal. Em algumas situações, as normas geram queda inicial de bem-estar social, amplamente recompensada quando se contabilizam os ganhos futuros. Também há o contrário, regulações que aparentemente produzem um momentâneo aumento de bem-estar social, mas que acarretam malefícios por gerações. Para exemplificar a teoria, são discutidos exemplos do direito falimentar, bem como uma decisão do STF. A conclusão do estudo é que, no processo de criação de novas regulações e nas decisões judiciais, deve haver ampla reflexão de custos e benefícios sociais, presentes e futuros, atentando para a eficiência dinâmica da sociedade.
+Creation-Date: 2016-07-14
+Number: 68/2016
+Keywords: Eficiência da legislação, Avaliação de impacto legislativo, Análise Econômica do Direito
+DOI: 10.5281/zenodo.23594321
+File-URL: https://zenodo.org/api/records/23594321/files/eprg-wp-2016-68.pdf/content
+File-Format: Application/pdf
+Handle: RePEc:gvn:eprgwp:682016
+
+Template-Type: ReDIF-Paper 1.0
+Author-Name: João Pedro Bertani Catrib
+Author-Name-First: João Pedro Bertani
+Author-Name-Last: Catrib
+Author-Name: Paulo Augusto Pettenuzzo de Britto
+Author-Name-First: Paulo Augusto Pettenuzzo
+Author-Name-Last: de Britto
+Author-Name: André Luiz Marques Serrano
+Author-Name-First: André Luiz Marques
+Author-Name-Last: Serrano
+Title: A estrutura de capital de empresas brasileiras de capital aberto: uma análise de seus determinantes
+Abstract: The capital structure issue is widely discussed and studied in both academia and professional worlds. The management of capital structure requires constant improvement of its actions in order to mitigate risk and attract investors. The objective of this study was to analyze the capital structure of Brazilian public companies with shares traded on São Paulo Stock Exchanges, from 2010 to 2013. From a review of the literature, which allowed the identification of the main determinants of capital structure, we used a panel data model to explain the level of indebtedness of the companies studied. The results indicate that firm size has a positive impact on the level of indebtedness. On the other hand, profitability has negative impact on the debt. The other variables, namely, risk, fixed assets to net worth ratio, and growth opportunities, as well as the business sector, showed no significant causal relationship.
+Creation-Date: 2016-05-04
+Number: 67/2016
+Keywords: Estrutura de capital, Mercado financeiro, Endividamento, Cias. brasileiras de capital aberto, Capital structure, financial market, indebtedness, Brazilian public companies
+DOI: 10.5281/zenodo.23594313
+File-URL: https://zenodo.org/api/records/23594313/files/eprg-wp-2016-671.pdf/content
+File-Format: Application/pdf
+Handle: RePEc:gvn:eprgwp:672016
+
+Template-Type: ReDIF-Paper 1.0
+Author-Name: Steve De Castro
+Author-Name-First: Steve
+Author-Name-Last: De Castro
+Author-Name: Flávio Gonçalves
+Author-Name-First: Flávio
+Author-Name-Last: Gonçalves
+Title: Tests for history dependence in mixed-Poisson growth: Brazil, 1822-2000, and USA, 1869-1996, with an estimate of the world mixing distribution at start-up
+Abstract: The growth empirics of two separate but related issues are studied. In the first, the annual data on GDP per person (GDPpp) for Brazil, 1822-2000, and the US, 1869-1996, were converted into arrival times for innovations defined as permanent increments to GDPpp of given size (e.g. 3%). We say an economy exhibits history dependence if its arrival times can be shown to come from a homogenous Poisson process, that is, with a constant mean arrival rate of innovations (the Poisson parameter, λ). Brazil's growth trajectory since 1822 is shown not to be history dependent in this sense, though both its truncated series, 1889-2000, and the US, 1869-1996, passed the tests. Brazil's stagnation in the mid to late 19th century, when coupled to its growth spurt in the 20th, is the suggested reason for the failure. The second study uses the Summers-Heston data for 134 economies in 2000 to estimate a discrete, theoretical distribution for the λ at start-up in 1800, based on the (unproved) assumption that each economy drew an arrival rate from this "mixing" distribution and stayed with it. The results show that if innovations are assumed to be big, rare events, then the world mixing distribution will be skewed, and all the λ drawn at start-up will be almost equal and thus the dispersion of incomes across nations 200 years later will then be due only to random variations along paths generated by the same homogenous Poisson process.
+Creation-Date: 2016-04-20
+Number: 66/2016
+Classification-JEL: O41, C15
+Keywords: stochastic growth, mixed Poisson processes, statistical tests
+DOI: 10.5281/zenodo.23594300
+File-URL: https://zenodo.org/api/records/23594300/files/eprg-wp-2016-66.pdf/content
+File-Format: Application/pdf
+Handle: RePEc:gvn:eprgwp:662016
+
+Template-Type: ReDIF-Paper 1.0
+Author-Name: Steve De Castro
+Author-Name-First: Steve
+Author-Name-Last: De Castro
+Title: Piketty's Prediction meets technical progress in Harrod-Domar's Dynamics and Solow Swan's Surrogate
+Abstract: Thomas Piketty [2014] uses mainly UN projections that the world GDP growth rate g can fall by half in 2010-2100, to predict that the capital or wealth share in world national income, αK, may double. This prediction for αK contradicts at least one of Kaldor's stylized facts and possibly the Kuznets curve. Negating somewhat this prognosis, we show here formally, that exogenous technical progress can vary the αK trajectories in either direction, even with the saving rate, s, held constant. Further, we show how s can be used not only to stabilize αK but also to allow GDP growth g to accompany its only true engine, technical progress. Like Piketty, we use the Solow-Swan model and ignore the recent literature which, since about 1985, tries to make endogenous this mother lode of growth. Finally, the paper suggests that the policy recommendation of this literature, for the great majority of the world's population, should continue to emphasize growth in per capita GDP, at least while the gap with the rich economies is so wide. The issue remains income distribution, not the ones within each economy, Piketty's contribution, but rather the one across them all.
+Creation-Date: 2016-04-13
+Number: 65/2016
+DOI: 10.5281/zenodo.23594294
+File-URL: https://zenodo.org/api/records/23594294/files/eprg-wp-2016-65.pdf/content
+File-Format: Application/pdf
+Handle: RePEc:gvn:eprgwp:652016
+
+Template-Type: ReDIF-Paper 1.0
+Author-Name: Helvio Antonio Pereira Marinho
+Author-Name-First: Helvio Antonio Pereira
+Author-Name-Last: Marinho
+Author-Name: Moisés de Andrade Resende Filho
+Author-Name-First: Moisés de Andrade
+Author-Name-Last: Resende Filho
+Author-Name: Vander Mendes Lucas
+Author-Name-First: Vander Mendes
+Author-Name-Last: Lucas
+Title: Análise do impacto da alteração normativa na aposentadoria por invalidez no Brasil
+Abstract: We investigate the response of federal civil servants to more stringent rules for disability retirement introduced by the Constitutional Amendment 41/2003 (EC 41/2003). First, we look for changes in the health conditions of Brazilians so to speculate on their effects on the use of disability benefit in Brazil. Then, we use those results in setting the control variables of econometric models we use to compare the behavior of civil servants (treatment group) and private sector workers (control group) in terms of the number and incidence of retirement disability. Based on difference-in-differences estimates, we conclude that civil servants reacted to the incentive created with the new rules by preventing disability retirements, thus mitigating the moral hazard problem of social security.
+Creation-Date: 2016-04-06
+Number: 64/2016
+Classification-JEL: A13, D71, H55
+Keywords: previdência Social, aposentadoria por invalidez, diferenças em diferenças, incentivos, risco moral, social security, disability retirement, difference-in-differences, incentives, moral hazard
+DOI: 10.5281/zenodo.23594279
+File-URL: https://zenodo.org/api/records/23594279/files/eprg-wp-2016-64.pdf/content
+File-Format: Application/pdf
+Handle: RePEc:gvn:eprgwp:642016
+
+Template-Type: ReDIF-Paper 1.0
+Author-Name: Andrew Francis-Tan
+Author-Name-First: Andrew
+Author-Name-Last: Francis-Tan
+Author-Name: Maria Tannuri-Pianto
+Author-Name-First: Maria
+Author-Name-Last: Tannuri-Pianto
+Title: Black movement: Estimating the effects of affirmative action in college admissions on education and labor market outcomes
+Abstract: The recent adoption of race-targeted policies makes Brazil an insightful place to study affirmative action. In this paper, we estimate the effects of racial quotas at the University of Brasilia, which reserved 20% of admissions slots for persons who self-identified as black. To do so, we link the admissions outcomes of high-performing applicants in 2004-2005 to their education and labor market outcomes in 2012. We adopt methods that make use of sharp discontinuities in the admissions process. In summary, the policy of racial quotas mostly improved outcomes for the targeted group. Relative to quota applicants below the cutoff, quota applicants above the cutoff enjoyed an increase in years of education, college completion, and labor earnings. Those gains were concentrated among men and applicants in more selective majors. For the large part, mismatch was not prevalent. However, there was evidence of mismatch among those quota students in less selective majors.
+Creation-Date: 2016-03-30
+Number: 63/2016
+Keywords: affirmative action, racial quotas, mismatch, educational policy, college quality, minorities, Brazil
+DOI: 10.5281/zenodo.23594271
+File-URL: https://zenodo.org/api/records/23594271/files/eprg-wp-2016-63.pdf/content
+File-Format: Application/pdf
+Handle: RePEc:gvn:eprgwp:632016
+
+Template-Type: ReDIF-Paper 1.0
+Author-Name: Rodrigo Schneider
+Author-Name-First: Rodrigo
+Author-Name-Last: Schneider
+Author-Name: Diloá Athias
+Author-Name-First: Diloá
+Author-Name-Last: Athias
+Author-Name: Maurício Soares Bugarin
+Author-Name-First: Maurício Soares
+Author-Name-Last: Bugarin
+Title: Electronic voting and Social Spending: The impact of enfranchisement on municipal public spending in Brazil
+Abstract: This article studies the effect of voting enfranchisement focused on the poor in Brazil and its consequences on municipal level social public spending. According to the model constructed in this work, it should be expected an increase in social spending. This prediction is empirically tested using electronic voting (EV) as instrument since it has impacted positively voting enfranchisement, biased toward the poor voter, without having a direct effect on public spending. A 2SLS regression and a differences-in-differences methodology are both applied to show that municipalities that used EV spent more on health, education and public employment compared to the ones that didn't confirming the hypothesis presented in our model.
+Creation-Date: 2016-01-13
+Number: 62/2016
+Keywords: Electronic voting, political participation, politically motivated intergovernmental transfers, social public spending
+DOI: 10.5281/zenodo.23594260
+File-URL: https://zenodo.org/api/records/23594260/files/eprg-wp-2015-62.pdf/content
+File-Format: Application/pdf
+Handle: RePEc:gvn:eprgwp:622016
