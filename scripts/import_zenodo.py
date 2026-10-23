@@ -14,20 +14,70 @@ import html
 import re
 import sys
 import unicodedata
+from concurrent.futures import ThreadPoolExecutor
 from pathlib import Path
 
 import requests
 from bs4 import BeautifulSoup
+from requests.adapters import HTTPAdapter
+from urllib3.util.retry import Retry
 
 ROOT = Path("RePEc/gvn/eprgwp")
 HANDLE_PREFIX = "RePEc:gvn:eprgwp:"
 ZENODO_ENDPOINT = "https://zenodo.org/api/records"
+RECORD_WORKERS = 4
+RDM_JSON = "application/vnd.inveniordm.v1+json"
 ABSTRACT_FALLBACKS = json.loads(Path("metadata/abstract_overrides.json").read_text(encoding="utf-8"))
-SESSION = requests.Session()
-SESSION.headers.update({
-    "Accept": "application/json",
-    "User-Agent": "EPRG-RePEc-Metadata/2.0 (https://econpolrg.com/)",
-})
+
+
+def zenodo_session(accept: str = "application/json") -> requests.Session:
+    """Reuse connections and respect Zenodo's retry/rate-limit responses."""
+    session = requests.Session()
+    session.headers.update({
+        "Accept": accept,
+        "User-Agent": "EPRG-RePEc-Metadata/2.0 (https://econpolrg.com/)",
+    })
+    retries = Retry(
+        total=4,
+        backoff_factor=1,
+        status_forcelist=(429, 500, 502, 503, 504),
+        allowed_methods=frozenset({"GET"}),
+        respect_retry_after_header=True,
+        raise_on_status=False,
+    )
+    session.mount("https://", HTTPAdapter(max_retries=retries))
+    return session
+
+
+SESSION = zenodo_session()
+
+
+def zenodo_json(session: requests.Session, url: str, params: dict | None = None) -> dict:
+    try:
+        response = session.get(url, params=params, timeout=(10, 40))
+        response.raise_for_status()
+        body = response.json()
+    except (requests.RequestException, ValueError) as exc:
+        # A failed request is not evidence that a record has no abstract.
+        # Abort before main() writes any ReDIF files.
+        raise RuntimeError(f"Could not read Zenodo {url}: {exc}") from exc
+    if not isinstance(body, dict):
+        raise RuntimeError(f"Expected a JSON object from Zenodo {url}")
+    return body
+
+
+def read_zenodo_record_batch(record_ids: list[str]) -> dict[str, dict]:
+    """One connection pool per worker; sessions are never shared by threads."""
+    records = {}
+    # application/json uses Zenodo's legacy serializer even for single records.
+    # Request the native InvenioRDM representation to retain typed descriptions.
+    with zenodo_session(RDM_JSON) as session:
+        for record_id in record_ids:
+            record = zenodo_json(session, f"{ZENODO_ENDPOINT}/{record_id}")
+            if str(record.get("id")) != record_id:
+                raise RuntimeError(f"Zenodo returned an unexpected record for {record_id}")
+            records[record_id] = record
+    return records
 
 
 def clean(value: object) -> str:
@@ -44,26 +94,34 @@ def normalized(value: str) -> str:
 
 
 def read_zenodo_records() -> list[dict]:
+    """Discover all community IDs, then fetch each complete native record once."""
     url = ZENODO_ENDPOINT
     params = {"communities": "econpolrg", "size": 20, "sort": "mostrecent"}
-    records: list[dict] = []
-    for page in range(50):
-        response = SESSION.get(url, params=params, timeout=40)
-        if not response.ok:
-            raise RuntimeError(
-                f"Zenodo HTTP {response.status_code} page {page + 1}: "
-                + response.text[:700]
-            )
-        body = response.json()
-        records.extend(body.get("hits", {}).get("hits", []))
-        url = body.get("links", {}).get("next")
+    record_ids: dict[str, None] = {}
+    for _ in range(50):
+        body = zenodo_json(SESSION, url, params)
+        for hit in (body.get("hits") or {}).get("hits") or []:
+            record_id = str(hit.get("id") or "").strip()
+            if not record_id:
+                raise RuntimeError("Zenodo search returned a record without an ID")
+            record_ids[record_id] = None
+        url = (body.get("links") or {}).get("next")
         if not url:
             break
         params = None
-    if not records:
+    else:
+        raise RuntimeError("Zenodo community pagination exceeded 50 pages")
+    if not record_ids:
         raise RuntimeError("Zenodo community econpolrg returned no published records")
-    print(f"Zenodo community: {len(records)} published records", flush=True)
-    return records
+    ids = list(record_ids)
+    workers = min(RECORD_WORKERS, len(ids))
+    batches = [ids[index::workers] for index in range(workers)]
+    full_records: dict[str, dict] = {}
+    with ThreadPoolExecutor(max_workers=workers) as executor:
+        for batch in executor.map(read_zenodo_record_batch, batches):
+            full_records.update(batch)
+    print(f"Zenodo community: {len(ids)} published records (full metadata)", flush=True)
+    return [full_records[record_id] for record_id in ids]
 
 
 def pdf_entries(record: dict) -> list[tuple[str, str]]:
@@ -180,19 +238,40 @@ def placeholder_abstract(value: str) -> bool:
 
 
 
-def extract_abstract(metadata: dict) -> tuple[str, str]:
-    """Find scientific abstracts in primary or typed Zenodo descriptions."""
-    primary = clean(metadata.get("description"))
-    if primary and not placeholder_abstract(primary):
-        return primary, "metadata.description"
-    for entry in metadata.get("additional_descriptions") or []:
+def additional_abstracts(metadata: dict) -> dict[str, str]:
+    """Map valid typed abstracts by language, accepting native or plain codes."""
+    abstracts: dict[str, str] = {}
+    descriptions = metadata.get("additional_descriptions") or []
+    if not isinstance(descriptions, list):
+        return abstracts
+    for entry in descriptions:
         if not isinstance(entry, dict):
             continue
         kind = entry.get("type") or {}
         kind = kind.get("id", "") if isinstance(kind, dict) else str(kind)
         candidate = clean(entry.get("description"))
-        if str(kind).casefold() == "abstract" and candidate and not placeholder_abstract(candidate):
-            return candidate, "metadata.additional_descriptions[abstract]"
+        if str(kind).casefold() != "abstract" or not candidate or placeholder_abstract(candidate):
+            continue
+        language = entry.get("lang") or ""
+        if isinstance(language, dict):
+            language = language.get("id") or ""
+        language = str(language).strip().casefold().replace("_", "-").split("-", 1)[0]
+        language = {"en": "eng", "pt": "por"}.get(language, language)
+        abstracts.setdefault(language, candidate)
+    return abstracts
+
+
+def extract_abstract(metadata: dict) -> tuple[str, str]:
+    """Prefer an explicitly English abstract, regardless of description order."""
+    abstracts = additional_abstracts(metadata)
+    if "eng" in abstracts:
+        return abstracts["eng"], "metadata.additional_descriptions[abstract,eng]"
+    primary = clean(metadata.get("description"))
+    if primary and not placeholder_abstract(primary):
+        return primary, "metadata.description"
+    if abstracts:
+        language = "por" if "por" in abstracts else next(iter(abstracts))
+        return abstracts[language], f"metadata.additional_descriptions[abstract,{language or 'und'}]"
     return "", "not found"
 
 

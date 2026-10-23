@@ -12,6 +12,7 @@ on:
       - 'scripts/import_zenodo.py'
       - 'metadata/abstract_overrides.json'
       - 'scripts/validate_repec.py'
+      - 'tests/test_import_zenodo.py'
       - '.github/workflows/sync-zenodo.yml'
 
 permissions:
@@ -37,6 +38,9 @@ jobs:
 
       - name: Install dependencies
         run: pip install requests beautifulsoup4
+
+      - name: Test Zenodo retrieval and abstract selection
+        run: python -m unittest discover -s tests -v
 
       - name: Fetch and convert published Zenodo records
         run: python scripts/import_zenodo.py
