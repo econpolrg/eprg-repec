@@ -159,25 +159,27 @@ def paper_identity(record: dict) -> tuple[int, int] | None:
     )
     for filename, _ in pdf_entries(record):
         match = pattern.search(filename)
-        if match:
-            parsed_year = int(match.group(1))
-            parsed_number = int(match.group(2))
+        if not match:
+            continue
             
-            correction_key = (str(record.get("id")), filename)
-            corrected_identity = FILENAME_IDENTITY_CORRECTIONS.get(correction_key)
+        parsed_year = int(match.group(1))
+        parsed_number = int(match.group(2))
+            
+        correction_key = (str(record.get("id")), filename)
+        corrected_identity = FILENAME_IDENTITY_CORRECTIONS.get(correction_key)
 
-            if corrected_identity is not None:
-                number, year = corrected_identity
-                print(
-                    f"FILENAME CORRECTION Zenodo {record.get('id')}: "
-                    f"{filename}; parsed as {parsed_number}/{parsed_year}, "
-                    f"using verified identity {number}/{year}",
-                    flush=True,
-                )
-            else:
-                number, year = parsed_number, parsed_year
+        if corrected_identity is not None:
+            number, year = corrected_identity
+            print(
+                f"FILENAME CORRECTION Zenodo {record.get('id')}: "
+                f"{filename}; parsed as {parsed_number}/{parsed_year}, "
+                f"using verified identity {number}/{year}",
+                flush=True,
+            )
+        else:
+            number, year = parsed_number, parsed_year
                 
-            sources.append((filename, int(match.group(2)), year))
+       sources.append((filename, number, year))
 
     series = re.compile(
         r"(?:economics\s+and\s+politics\s+|eprg\s+)?"
