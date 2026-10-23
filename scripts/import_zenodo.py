@@ -31,6 +31,7 @@ RDM_JSON = "application/vnd.inveniordm.v1+json"
 # Scope the correction to its exact record and filename; keep the Zenodo file URL.
 FILENAME_YEAR_CORRECTIONS = {
     ("23574391", "eprg-wp-2020-105.pdf"): 2021,
+    ("23594525", "eprg-wp-2017-762.pdf"): 2017,
 }
 ABSTRACT_FALLBACKS = json.loads(Path("metadata/abstract_overrides.json").read_text(encoding="utf-8"))
 
