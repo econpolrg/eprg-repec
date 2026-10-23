@@ -3,16 +3,19 @@ name: Import EPRG papers from Zenodo
 
 on:
   workflow_dispatch:
+
   schedule:
     # Automatic Zenodo community polling at 00:17, 06:17, 12:17 and 18:17 UTC.
     - cron: '17 */6 * * *'
+
   push:
     branches: [main]
     paths:
       - 'scripts/import_zenodo.py'
+      - 'scripts/audit_zenodo_numbering.py'
+      - 'scripts/validate_repec.py'
       - 'metadata/abstract_overrides.json'
       - 'metadata/filename_identity_corrections.json'
-      - 'scripts/validate_repec.py'
       - 'tests/test_import_zenodo.py'
       - '.github/workflows/sync-zenodo.yml'
 
@@ -26,41 +29,12 @@ concurrency:
 jobs:
   import-zenodo:
     runs-on: ubuntu-24.04
+
     steps:
       - name: Checkout repository
         uses: actions/checkout@v5
         with:
           persist-credentials: true
-
-      # TEMPORARY DEBUG STEP
-      - name: Diagnose checked-out import script
-        run: |
-          echo "========== WORKFLOW CONTEXT =========="
-          echo "GITHUB_REF=$GITHUB_REF"
-          echo "GITHUB_REF_NAME=$GITHUB_REF_NAME"
-          echo "GITHUB_SHA=$GITHUB_SHA"
-
-          echo
-          echo "========== CHECKED-OUT COMMIT =========="
-          git rev-parse HEAD
-          git log -1 --oneline
-
-          echo
-          echo "========== SCRIPT =========="
-          pwd
-          realpath scripts/import_zenodo.py
-
-          echo
-          echo "========== CORRECTIONS =========="
-          grep -n -A 8 "FILENAME_.*CORRECTIONS" scripts/import_zenodo.py || true
-
-          echo
-          echo "========== RECORD 23594525 =========="
-          grep -n "23594525" scripts/import_zenodo.py || true
-
-          echo
-          echo "========== PAPER_IDENTITY =========="
-          nl -ba scripts/import_zenodo.py | sed -n '140,220p'
 
       - name: Set up Python
         uses: actions/setup-python@v6
@@ -73,6 +47,9 @@ jobs:
       - name: Test Zenodo retrieval and abstract selection
         run: python -m unittest discover -s tests -v
 
+      - name: Audit Zenodo working-paper numbering
+        run: python scripts/audit_zenodo_numbering.py
+
       - name: Fetch and convert published Zenodo records
         run: python scripts/import_zenodo.py
 
@@ -84,6 +61,7 @@ jobs:
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git add RePEc/gvn/eprgwp/
+
           if ! git diff --cached --quiet; then
             git commit -m "Synchronize EPRG RePEc metadata from Zenodo"
             git push
@@ -106,13 +84,16 @@ jobs:
   deploy-pages:
     needs: import-zenodo
     runs-on: ubuntu-24.04
+
     permissions:
       pages: write
       id-token: write
       contents: read
+
     environment:
       name: github-pages
       url: ${{ steps.deployment.outputs.page_url }}
+
     steps:
       - name: Deploy archive metadata to GitHub Pages
         id: deployment
@@ -121,14 +102,32 @@ jobs:
   verify-pages:
     needs: deploy-pages
     runs-on: ubuntu-24.04
+
     steps:
       - name: Check indexable archive and series
         run: |
           set -euo pipefail
+
           root="https://econpolrg.github.io/eprg-repec/RePEc/gvn"
-          for item in "/" "/gvnarch.redif" "/gvnseri.redif" "/eprgwp/" "/eprgwp/2025.redif" "/eprgwp/2026.redif"; do
+
+          for item in \
+            "/" \
+            "/gvnarch.redif" \
+            "/gvnseri.redif" \
+            "/eprgwp/" \
+            "/eprgwp/2025.redif" \
+            "/eprgwp/2026.redif"
+          do
             printf "Checking %s\n" "$root$item"
-            curl --fail --location --silent --show-error --retry 8 --retry-delay 4 --output /dev/null "$root$item"
+            curl \
+              --fail \
+              --location \
+              --silent \
+              --show-error \
+              --retry 8 \
+              --retry-delay 4 \
+              --output /dev/null \
+              "$root$item"
           done
+
           echo "All RePEc archive URLs are publicly accessible"
-          
