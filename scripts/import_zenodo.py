@@ -27,11 +27,11 @@ HANDLE_PREFIX = "RePEc:gvn:eprgwp:"
 ZENODO_ENDPOINT = "https://zenodo.org/api/records"
 RECORD_WORKERS = 4
 RDM_JSON = "application/vnd.inveniordm.v1+json"
-# Maintainer-confirmed filename error: this published PDF belongs to 105/2021.
-# Scope the correction to its exact record and filename; keep the Zenodo file URL.
+# Maintainer-confirmed filename errors.
+# Map: (Zenodo record ID, exact PDF filename) -> (paper number, year)
 FILENAME_YEAR_CORRECTIONS = {
-    ("23574391", "eprg-wp-2020-105.pdf"): 2021,
-    ("23594525", "eprg-wp-2017-76.pdf"): 2017,
+    ("23574391", "eprg-wp-2020-105.pdf"): (105, 2021),
+    ("23594525", "eprg-wp-2017-762.pdf"): (76, 2017),
 }
 ABSTRACT_FALLBACKS = json.loads(Path("metadata/abstract_overrides.json").read_text(encoding="utf-8"))
 
@@ -160,11 +160,24 @@ def paper_identity(record: dict) -> tuple[int, int] | None:
     for filename, _ in pdf_entries(record):
         match = pattern.search(filename)
         if match:
-            file_year = int(match.group(1))
-            year = FILENAME_YEAR_CORRECTIONS.get((str(record.get("id")), filename), file_year)
-            if year != file_year:
-                print(f"FILENAME CORRECTION Zenodo {record.get('id')}: "
-                      f"{filename}; using verified year {year}", flush=True)
+            parsed_year = int(match.group(1))
+            parsed_number = int(match.group(2))
+            
+            correction_key = (str(record.get("id")), filename)
+            corrected_identity = FILENAME_IDENTITY_CORRECTIONS.get(correction_key)
+
+            if corrected_identity is not None:
+                number, year = corrected_identity
+                print(
+                    f"FILENAME CORRECTION Zenodo {record.get('id')}: "
+                    f"{filename}; parsed as {parsed_number}/{parsed_year}, "
+                    f"using verified identity {number}/{year}",
+                    flush=True,
+                )
+            else:
+                number = parsed_number
+                year = parsed_year
+                
             sources.append((filename, int(match.group(2)), year))
 
     series = re.compile(
