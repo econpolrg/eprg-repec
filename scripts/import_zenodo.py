@@ -179,7 +179,7 @@ def paper_identity(record: dict) -> tuple[int, int] | None:
         else:
             number, year = parsed_number, parsed_year
                 
-       sources.append((filename, number, year))
+        sources.append((filename, number, year))
 
     series = re.compile(
         r"(?:economics\s+and\s+politics\s+|eprg\s+)?"
