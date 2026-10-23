@@ -1,0 +1,17 @@
+Template-Type: ReDIF-Paper 1.0
+Author-Name: Adriana Cuoco Portugal
+Author-Name-First: Adriana Cuoco
+Author-Name-Last: Portugal
+Author-Name: Maurício Soares Bugarin
+Author-Name-First: Maurício Soares
+Author-Name-Last: Bugarin
+Title: Licitações com preço de reserva secreto e negociação: Uma análise de teoria dos leilões para o caso de valores privados
+Abstract: This article compares alternative mechanism designs for the procurement of public works or services. It analyzes the simple reverse auction with no reservation price, the reverse auction with public reservation price, with secret reservation price and, finally, with secret reservation price and the possibility of negotiation when the winning bid is above the reservation price. We make use of the framework of auction theory with symmetric, independent, and identically distributed private values. The theoretical analysis and the simulations suggest that setting a reservation price yields better results for the government. Moreover, it is more advantageous to announce the reservation price if this price is low, and more advantageous to keep it secret if this price is high. Ex-post negotiation in the secret reserve price model is detrimental because it induces an increase in participants ' bids. However, the higher the competition, the smaller the differences between the alternative designs , which suggest that simpler designs may be optimal when there is high competition.
+Creation-Date: 2021-10-18
+Number: 105/2021
+Classification-JEL: C72, D04, D44, D47
+Keywords: Licitações públicas, preço de reserva anunciado, preço de reserva secreto, negociação em licitações, Public procurement auctions, announced reservation price, secret reservation price, ex-post negotiation in procurements
+DOI: 10.5281/zenodo.23574391
+File-URL: https://zenodo.org/api/records/23574391/files/eprg-wp-2020-105.pdf/content
+File-Format: Application/pdf
+Handle: RePEc:gvn:eprgwp:1052021
