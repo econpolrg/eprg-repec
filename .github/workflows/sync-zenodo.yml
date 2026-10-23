@@ -11,6 +11,7 @@ on:
     paths:
       - 'scripts/import_zenodo.py'
       - 'metadata/abstract_overrides.json'
+      - 'metadata/filename_identity_corrections.json'
       - 'scripts/validate_repec.py'
       - 'tests/test_import_zenodo.py'
       - '.github/workflows/sync-zenodo.yml'
