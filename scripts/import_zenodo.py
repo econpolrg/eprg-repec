@@ -36,6 +36,11 @@ FILENAME_IDENTITY_CORRECTIONS = json.loads(
 )
 ABSTRACT_FALLBACKS = json.loads(Path("metadata/abstract_overrides.json").read_text(encoding="utf-8"))
 
+MISSING_WORKING_PAPERS = json.loads(
+    Path("metadata/missing_working_papers.json").read_text(
+        encoding="utf-8"
+    )
+)
 
 def zenodo_session(accept: str = "application/json") -> requests.Session:
     """Reuse connections and respect Zenodo's retry/rate-limit responses."""
@@ -351,6 +356,70 @@ def generate_paper(record: dict, number: int, year: int) -> tuple[str, str]:
     lines.append("Handle: " + handle)
     return handle, "\n".join(lines)
 
+def generate_missing_file_paper(
+    identity: str,
+    metadata: dict,
+) -> tuple[str, str, int, int]:
+    """Generate ReDIF metadata for a historical paper whose PDF was lost.
+
+    Only entries explicitly marked as missing_file are accepted. No DOI,
+    abstract, JEL codes, keywords, or file fields are invented.
+    """
+    match = re.fullmatch(r"(\d{1,4})/(20\d{2})", identity)
+
+    if not match:
+        raise ValueError(
+            f"Invalid missing-paper identity: {identity!r}"
+        )
+
+    number = int(match.group(1))
+    year = int(match.group(2))
+
+    if metadata.get("status") != "missing_file":
+        raise ValueError(
+            f"Cannot generate ReDIF for {identity} with status "
+            f"{metadata.get('status')!r}"
+        )
+
+    title = clean(metadata.get("title"))
+    if not title:
+        raise ValueError(
+            f"Missing-file paper {identity} has no title"
+        )
+
+    authors = metadata.get("authors") or []
+    if not isinstance(authors, list) or not authors:
+        raise ValueError(
+            f"Missing-file paper {identity} has no authors"
+        )
+
+    lines = ["Template-Type: ReDIF-Paper 1.0"]
+
+    for author in authors:
+        author_name = clean(author)
+        if not author_name:
+            raise ValueError(
+                f"Missing-file paper {identity} has an empty author"
+            )
+        lines.append("Author-Name: " + author_name)
+
+    lines.append("Title: " + title)
+
+    publication_date = clean(metadata.get("publication_date"))
+    if publication_date:
+        if not re.fullmatch(r"\d{4}-\d{2}-\d{2}", publication_date):
+            raise ValueError(
+                f"Invalid publication date for {identity}: "
+                f"{publication_date!r}"
+            )
+        lines.append("Creation-Date: " + publication_date)
+
+    lines.append(f"Number: {number}/{year}")
+
+    handle = f"{HANDLE_PREFIX}{number}{year}"
+    lines.append("Handle: " + handle)
+
+    return handle, "\n".join(lines), number, year
 
 def extract_names(template: str) -> list[str]:
     return re.findall(r"^Author-Name: (.+)$", template, re.M)
@@ -454,6 +523,56 @@ def main() -> None:
         jel, _ = jel_and_keywords(record.get("metadata") or {})
         print(f"IMPORT {number}/{year} (Zenodo {record.get('id')}; JEL: {', '.join(jel) or 'not supplied'}) — {title}")
 
+        imported_missing_files = 0
+
+    for identity, metadata in MISSING_WORKING_PAPERS.items():
+        status = metadata.get("status")
+
+        if status in {"withdrawn", "renumbered"}:
+            print(
+                f"DOCUMENTED GAP {identity}: {status}; "
+                "no ReDIF entry generated",
+                flush=True,
+            )
+            continue
+
+        if status != "missing_file":
+            raise ValueError(
+                f"Unknown missing-paper status for {identity}: "
+                f"{status!r}"
+            )
+
+        handle, template, number, year = generate_missing_file_paper(
+            identity,
+            metadata,
+        )
+
+        if handle in used_handles:
+            raise ValueError(
+                f"Documented missing paper conflicts with an existing "
+                f"Zenodo handle: {handle}"
+            )
+
+        used_handles[handle] = f"documented-gap:{identity}"
+
+        if year not in per_year:
+            per_year[year] = load_existing(year)
+
+        template = preserve_manual_edits(
+            per_year[year].get(handle),
+            template,
+        )
+        per_year[year][handle] = template
+
+        imported_missing_files += 1
+
+        print(
+            f"IMPORT {number}/{year} "
+            f"(documented historical paper; PDF unavailable) — "
+            f"{clean(metadata.get('title'))}",
+            flush=True,
+        )
+    
     if not imported:
         raise RuntimeError("No numbered EPRG working papers could be identified in Zenodo")
     ROOT.mkdir(parents=True, exist_ok=True)
@@ -466,7 +585,17 @@ def main() -> None:
         )
     years = [int(p.stem) for p in ROOT.glob("20??.redif")]
     save_index(years)
-    print(f"Imported {imported} of {len(records)} published EPRG Zenodo records")
+    print(
+    f"Imported {imported} of {len(records)} published EPRG Zenodo records"
+        )
+    print(
+        f"Imported {imported_missing_files} documented historical papers "
+        "without available PDFs"
+        )
+    print(
+        f"Total ReDIF papers generated or maintained: "
+        f"{imported + imported_missing_files}"
+        )
     if missing_numbers:
         print("Not indexed because no unambiguous working-paper number was found:", file=sys.stderr)
         for item in missing_numbers:
