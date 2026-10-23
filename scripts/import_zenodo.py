@@ -29,10 +29,11 @@ RECORD_WORKERS = 4
 RDM_JSON = "application/vnd.inveniordm.v1+json"
 # Maintainer-confirmed filename errors.
 # Map: (Zenodo record ID, exact PDF filename) -> (paper number, year)
-FILENAME_IDENTITY_CORRECTIONS = {
-    ("23574391", "eprg-wp-2020-105.pdf"): (105, 2021),
-    ("23594525", "eprg-wp-2017-762.pdf"): (76, 2017),
-}
+FILENAME_IDENTITY_CORRECTIONS = json.loads(
+    Path("metadata/filename_identity_corrections.json").read_text(
+        encoding="utf-8"
+    )
+)
 ABSTRACT_FALLBACKS = json.loads(Path("metadata/abstract_overrides.json").read_text(encoding="utf-8"))
 
 
@@ -165,8 +166,12 @@ def paper_identity(record: dict) -> tuple[int, int] | None:
         parsed_year = int(match.group(1))
         parsed_number = int(match.group(2))
             
-        correction_key = (str(record.get("id")), filename)
-        corrected_identity = FILENAME_IDENTITY_CORRECTIONS.get(correction_key)
+        record_id = str(record.get("id"))
+        corrected_identity = (
+            FILENAME_IDENTITY_CORRECTIONS
+            .get(record_id, {})
+            .get(filename)
+        )
 
         if corrected_identity is not None:
             number, year = corrected_identity
