@@ -1,0 +1,50 @@
+{
+  "3/2013": {
+    "status": "withdrawn",
+    "title": "Democracy, Accountability, and Poverty Alleviation in Mexico: Self-Restraining Reform and the Depoliticization of Social Spending",
+    "author": "Yuriko Takahashi",
+    "note": "Access cancelled by author's request."
+  },
+  "10/2013": {
+    "status": "missing_file",
+    "title": "Mecanismos de difusão de Políticas Sociais no Brasil: uma análise do Programa Saúde da Família",
+    "authors": [
+      "Denilson Bandeira Coêlho",
+      "Pedro Cavalcante",
+      "Mathieu Turgeon"
+    ],
+    "original_filename": "eprg-wp-2013-102.pdf"
+  },
+  "104/2021": {
+    "status": "missing_file",
+    "title": "Planos de Saúde Coletivos: Análise Econômica do Reajuste por Faixa Etária",
+    "authors": [
+      "Fernando B. Meneguin",
+      "Maurício Soares Bugarin",
+      "Tomás T. S. Bugarin"
+    ],
+    "original_filename": "eprg-wp-2020-104.pdf"
+  },
+  "109/2024": {
+  "status": "renumbered",
+  "canonical_number": 116,
+  "canonical_year": 2024,
+  "title": "There is Trouble with the Trees: How to Avoid Trade-Induced Deforestation?",
+  "authors": [
+    "Alan Leal",
+    "Maurício S. Bugarin"
+  ],
+  "original_filename": "eprg-wp-2024-109.pdf",
+  "canonical_doi": "10.5281/zenodo.23545265",
+  "note": "Originally listed as EPRG Working Paper 109/2024 and subsequently published as 116/2024."
+},
+  "114/2024": {
+    "status": "missing_file",
+    "title": "Income Inequality and Elections’ Financing: New Evidence from Brazil and Japan",
+    "authors": [
+      "Felipe Roviello",
+      "Maurício S. Bugarin"
+    ],
+    "original_filename": "eprg-wp-2024-114.pdf"
+  }
+}
