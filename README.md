@@ -30,6 +30,12 @@ and local fallbacks remain available when Zenodo supplies no usable abstract.
 Run the regression tests locally with `python -m unittest discover -s tests -v`.
 The synchronization workflow also runs them before importing records.
 
+Known filename errors can be recorded in `FILENAME_YEAR_CORRECTIONS`, scoped to
+the exact Zenodo record ID and filename. Record `23574391` is paper **105/2021**;
+its original PDF filename incorrectly contains 2020. This verified correction
+preserves the published file and URL. All other numbering conflicts, including
+conflicts with the corrected year, still stop the import.
+
 ## RePEc
 
 Check that https://econpolrg.github.io/eprg-repec/RePEc/gvn/ lists the archive, series and papers.

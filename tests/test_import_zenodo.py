@@ -139,6 +139,44 @@ class AbstractTests(unittest.TestCase):
         self.assertIn("File-URL: https://zenodo.org/records/1/files/paper.pdf\n", template)
 
 
+class IdentityTests(unittest.TestCase):
+    def known_filename_error(self):
+        full_record = record(23574391)
+        full_record["metadata"]["description"] = "Economics and Politics Working Paper 105/2021"
+        entry = full_record["files"]["entries"]["paper.pdf"]
+        entry["key"] = "eprg-wp-2020-105.pdf"
+        entry["links"]["content"] = "https://zenodo.org/records/23574391/files/eprg-wp-2020-105.pdf"
+        return full_record
+
+    def test_verified_filename_error_uses_correct_year_and_preserves_file_url(self):
+        full_record = self.known_filename_error()
+        self.assertEqual(importer.paper_identity(full_record), (105, 2021))
+        handle, template = importer.generate_paper(full_record, 105, 2021)
+        self.assertEqual(handle, "RePEc:gvn:eprgwp:1052021")
+        self.assertIn("Number: 105/2021\n", template)
+        self.assertIn("File-URL: https://zenodo.org/records/23574391/files/eprg-wp-2020-105.pdf\n",
+                      template)
+
+    def test_correction_does_not_apply_to_another_record_or_filename(self):
+        for field in ("id", "filename"):
+            with self.subTest(field=field):
+                full_record = self.known_filename_error()
+                if field == "id":
+                    full_record["id"] = "999"
+                else:
+                    full_record["files"]["entries"]["paper.pdf"]["key"] = "eprg-wp-2019-105.pdf"
+                with self.assertRaisesRegex(ValueError, "Conflicting paper numbering"):
+                    importer.paper_identity(full_record)
+
+    def test_correction_does_not_hide_a_conflict_in_the_number_or_corrected_year(self):
+        for identity in ("106/2021", "105/2022"):
+            with self.subTest(identity=identity):
+                full_record = self.known_filename_error()
+                full_record["metadata"]["description"] = "EPRG Working Paper " + identity
+                with self.assertRaisesRegex(ValueError, "Conflicting paper numbering"):
+                    importer.paper_identity(full_record)
+
+
 class RetrievalTests(unittest.TestCase):
     def setUp(self):
         self.api = ZenodoAPI()

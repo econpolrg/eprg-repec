@@ -27,6 +27,11 @@ HANDLE_PREFIX = "RePEc:gvn:eprgwp:"
 ZENODO_ENDPOINT = "https://zenodo.org/api/records"
 RECORD_WORKERS = 4
 RDM_JSON = "application/vnd.inveniordm.v1+json"
+# Maintainer-confirmed filename error: this published PDF belongs to 105/2021.
+# Scope the correction to its exact record and filename; keep the Zenodo file URL.
+FILENAME_YEAR_CORRECTIONS = {
+    ("23574391", "eprg-wp-2020-105.pdf"): 2021,
+}
 ABSTRACT_FALLBACKS = json.loads(Path("metadata/abstract_overrides.json").read_text(encoding="utf-8"))
 
 
@@ -154,7 +159,12 @@ def paper_identity(record: dict) -> tuple[int, int] | None:
     for filename, _ in pdf_entries(record):
         match = pattern.search(filename)
         if match:
-            sources.append((filename, int(match.group(2)), int(match.group(1))))
+            file_year = int(match.group(1))
+            year = FILENAME_YEAR_CORRECTIONS.get((str(record.get("id")), filename), file_year)
+            if year != file_year:
+                print(f"FILENAME CORRECTION Zenodo {record.get('id')}: "
+                      f"{filename}; using verified year {year}", flush=True)
+            sources.append((filename, int(match.group(2)), year))
 
     series = re.compile(
         r"(?:economics\s+and\s+politics\s+|eprg\s+)?"
