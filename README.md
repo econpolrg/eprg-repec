@@ -45,7 +45,7 @@ Check that https://econpolrg.github.io/eprg-repec/RePEc/gvn/ lists the archive, 
 
 The same scheduled workflow now also synchronizes the [Working Papers catalogue](https://econpolrg.com/working-papers/) (WordPress page ID `19`). The validated ReDIF metadata supplies each paper's number, year, date, title, author names and Zenodo PDF URL. The integration inserts **only missing numbered entries**, in descending series order; it does not re-create or edit any existing row or other Gutenberg blocks. Existing manually curated text and ORCID icons remain unchanged. Documented missing-file papers are not added without a PDF link.
 
-WordPress requires authentication to modify a published page. This WordPress.com *Simple* site uses the public API proxy at `https://public-api.wordpress.com/wp/v2/sites/econpolrg.com/pages/19`. A connected WordPress ChatGPT session cannot be reused as an unattended GitHub Actions credential.
+WordPress requires authentication to modify a published page. This WordPress.com *Simple* site uses the posts-scoped classic API endpoint `https://public-api.wordpress.com/rest/v1.1/sites/52860594/posts/19` (with `context=edit` for raw Gutenberg markup). This avoids the modern `wp/v2` pages endpoint, which requires the broader OAuth `global` scope on this account. A connected WordPress ChatGPT session cannot be reused as an unattended GitHub Actions credential.
 
 **One-time activation (site administrator):**
 
