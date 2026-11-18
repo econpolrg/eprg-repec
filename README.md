@@ -39,3 +39,22 @@ conflicts with the corrected year, still stop the import.
 ## RePEc
 
 Check that https://econpolrg.github.io/eprg-repec/RePEc/gvn/ lists the archive, series and papers.
+
+
+## Publish newly indexed papers on econpolrg.com
+
+The same scheduled workflow now also synchronizes the [Working Papers catalogue](https://econpolrg.com/working-papers/) (WordPress page ID `19`). The validated ReDIF metadata supplies each paper's number, year, date, title, author names and Zenodo PDF URL. The integration inserts **only missing numbered entries**, in descending series order; it does not re-create or edit any existing row or other Gutenberg blocks. Existing manually curated text and ORCID icons remain unchanged. Documented missing-file papers are not added without a PDF link.
+
+WordPress requires authentication to modify a published page. This WordPress.com *Simple* site uses the public API proxy at `https://public-api.wordpress.com/wp/v2/sites/econpolrg.com/pages/19`. A connected WordPress ChatGPT session cannot be reused as an unattended GitHub Actions credential.
+
+**One-time activation (site administrator):**
+
+1. Register a WordPress.com OAuth application and obtain a bearer access token with permission to edit the EPRG site. WordPress.com describes the OAuth process at https://developer.wordpress.com/docs/api/oauth2/ and a personal-use token exchange at https://developer.wordpress.com/docs/api/getting-started/. Never use or commit the account password as a GitHub secret.
+2. In GitHub, open `econpolrg/eprg-repec` → **Settings** → **Secrets and variables** → **Actions** → **New repository secret**. Name it exactly `WORDPRESS_ACCESS_TOKEN` and paste the OAuth bearer access token.
+3. In GitHub Actions, manually run `Import EPRG papers from Zenodo`, and check the `sync-wordpress` job log. It should report either no new papers or the identities inserted. The next scheduled run checks again automatically.
+
+Without this secret, the WordPress step **skips safely** while the existing RePEc import and GitHub Pages publication continue to work. Do not paste OAuth tokens into source code, commit messages, public issues or this README.
+
+The integration checks Zenodo **every six hours** via GitHub Actions. It updates WordPress only after RePEc generation, GitHub Pages publication and live URL validation all succeed. New papers appear when a scheduled/manual run executes successfully; the process is polling rather than an instantaneous Zenodo webhook.
+
+Run the pure adapter regression tests with `python -m unittest discover -s tests -v`. A manual dry-run without writing to WordPress is available with `WORDPRESS_ACCESS_TOKEN=... python scripts/sync_wordpress.py --dry-run` (use a private environment variable, not a literal credential in shell history).
