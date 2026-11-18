@@ -20,8 +20,10 @@ import requests
 
 REPEC_DIRECTORY = Path("RePEc/gvn/eprgwp")
 WORDPRESS_PAGE_ID = 19
+# Prefer the numeric site ID: it avoids custom-domain routing/permission issues.
+WORDPRESS_SITE_ID = 52860594
 WORDPRESS_API = (
-    "https://public-api.wordpress.com/wp/v2/sites/econpolrg.com/"
+    f"https://public-api.wordpress.com/wp/v2/sites/{WORDPRESS_SITE_ID}/"
     f"pages/{WORDPRESS_PAGE_ID}"
 )
 MONTHS_EN = ("Jan", "Feb", "Mar", "Apr", "May", "Jun",
@@ -191,7 +193,18 @@ def get_page(session: requests.Session) -> dict:
         params={"context": "edit", "_fields": "id,status,modified,content"},
         timeout=(10, 35),
     )
-    response.raise_for_status()
+    if not response.ok:
+        try:
+            body = response.json()
+            code = body.get("code", "unknown") if isinstance(body, dict) else "unknown"
+            detail = body.get("message", "") if isinstance(body, dict) else ""
+        except ValueError:
+            code, detail = "non-json-response", ""
+        # Never emit Authorization headers, credentials, or response bodies.
+        raise RuntimeError(
+            f"WordPress API rejected page read (HTTP {response.status_code}; "
+            f"code={code}; message={str(detail)[:250]})"
+        )
     page = response.json()
     if page.get("id") != WORDPRESS_PAGE_ID or page.get("status") != "publish":
         raise RuntimeError("Unexpected WordPress page ID or status")
