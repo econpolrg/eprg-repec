@@ -160,7 +160,8 @@ jobs:
           WORDPRESS_ACCESS_TOKEN: ${{ secrets.WORDPRESS_ACCESS_TOKEN }}
         run: |
           if [[ -z "$WORDPRESS_ACCESS_TOKEN" ]]; then
-            echo "::notice::WORDPRESS_ACCESS_TOKEN not configured; RePEc remains synchronized; WordPress publication is skipped"
-            exit 0
+            echo "::error::WORDPRESS_ACCESS_TOKEN not configured; add this repository secret to activate WordPress synchronization"
+            exit 1
           fi
+          echo "Checking WordPress catalogue for newly published Zenodo papers"
           python scripts/sync_wordpress.py
