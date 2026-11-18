@@ -22,9 +22,11 @@ REPEC_DIRECTORY = Path("RePEc/gvn/eprgwp")
 WORDPRESS_PAGE_ID = 19
 # Prefer the numeric site ID: it avoids custom-domain routing/permission issues.
 WORDPRESS_SITE_ID = 52860594
+# The WordPress.com legacy REST content endpoint accepts the narrowly scoped
+# OAuth 'posts' token. The modern wp/v2 pages proxy requires 'global'.
 WORDPRESS_API = (
-    f"https://public-api.wordpress.com/wp/v2/sites/{WORDPRESS_SITE_ID}/"
-    f"pages/{WORDPRESS_PAGE_ID}"
+    f"https://public-api.wordpress.com/rest/v1.1/sites/{WORDPRESS_SITE_ID}/"
+    f"posts/{WORDPRESS_PAGE_ID}"
 )
 MONTHS_EN = ("Jan", "Feb", "Mar", "Apr", "May", "Jun",
              "Jul", "Aug", "Sep", "Oct", "Nov", "Dec")
@@ -190,13 +192,13 @@ def merge_into_page(raw: str, papers: dict[tuple[int, int], Paper]) -> tuple[str
 def get_page(session: requests.Session) -> dict:
     response = session.get(
         WORDPRESS_API,
-        params={"context": "edit", "_fields": "id,status,modified,content"},
+        params={"context": "edit"},
         timeout=(10, 35),
     )
     if not response.ok:
         try:
             body = response.json()
-            code = body.get("code", "unknown") if isinstance(body, dict) else "unknown"
+            code = body.get("error", body.get("code", "unknown")) if isinstance(body, dict) else "unknown"
             detail = body.get("message", "") if isinstance(body, dict) else ""
         except ValueError:
             code, detail = "non-json-response", ""
@@ -205,12 +207,18 @@ def get_page(session: requests.Session) -> dict:
             f"WordPress API rejected page read (HTTP {response.status_code}; "
             f"code={code}; message={str(detail)[:250]})"
         )
-    page = response.json()
-    if page.get("id") != WORDPRESS_PAGE_ID or page.get("status") != "publish":
-        raise RuntimeError("Unexpected WordPress page ID or status")
-    if not isinstance((page.get("content") or {}).get("raw"), str):
-        raise RuntimeError("WordPress API did not provide editable raw Gutenberg content")
-    return page
+    data = response.json()
+    raw = data.get("content")
+    if data.get("ID") != WORDPRESS_PAGE_ID or data.get("type") != "page":
+        raise RuntimeError("Unexpected WordPress page ID or type")
+    if data.get("status") != "publish":
+        raise RuntimeError("Refusing to update unpublished WordPress page")
+    if not isinstance(raw, str) or "<!-- wp:table " not in raw:
+        raise RuntimeError(
+            "WordPress legacy API did not return editable Gutenberg block markup"
+        )
+    return {"id":data["ID"], "status":data["status"],
+            "modified":data["modified"], "content":{"raw":raw}}
 
 
 def sync(dry_run: bool = False) -> None:
@@ -247,7 +255,7 @@ def sync(dry_run: bool = False) -> None:
 
         response = session.post(
             WORDPRESS_API,
-            json={"content": updated},
+            data={"content": updated},
             timeout=(10, 50),
         )
         response.raise_for_status()
