@@ -67,6 +67,60 @@ class WordpressSynchronizationTests(unittest.TestCase):
         with self.assertRaises(ValueError):
             module.merge_into_page(broken, {(126, 2026): paper(126)})
 
+
+    def test_new_row_includes_orcid_badges_without_changing_title(self):
+        from dataclasses import replace
+        p = replace(paper(126), orcids=(
+            "0000-0001-2345-6789", "0000-0001-8178-0878"
+        ))
+        line = module.make_row(p)
+        self.assertIn("https://orcid.org/0000-0001-2345-6789", line)
+        self.assertIn("https://orcid.org/0000-0001-8178-0878", line)
+        self.assertEqual(line.count('class="wp-image-5805"'), 2)
+        self.assertIn("A &amp; B", line)
+
+    def test_extract_orcid_from_native_zenodo_creator(self):
+        creator = {
+            "person_or_org": {
+                "name": "Lucas, Vander",
+                "identifiers": [
+                    {"scheme": "orcid", "identifier": "0000-0001-8178-0878"}
+                ],
+            }
+        }
+        self.assertEqual(
+            module.creator_orcid(creator), "0000-0001-8178-0878"
+        )
+
+    def test_backfill_existing_126_author_markup_only(self):
+        from dataclasses import replace
+        base = module.make_row(paper(126))
+        target = replace(paper(126), orcids=(
+            "0000-0001-2345-6789", "0000-0001-8178-0878"
+        ))
+        page = PAGE.replace("<tbody>", "<tbody>" + base)
+        revised, changed = module.backfill_existing_orcids(
+            page, {(126, 2026): target}
+        )
+        self.assertEqual(changed, [(126, 2026)])
+        self.assertIn("https://orcid.org/0000-0001-8178-0878", revised)
+        self.assertIn('<img class="orcid" src="original.png">', revised)
+        # Running twice must never add duplicates.
+        second, again = module.backfill_existing_orcids(
+            revised, {(126, 2026): target}
+        )
+        self.assertEqual(second, revised)
+        self.assertEqual(again, [])
+
+    def test_no_orcid_is_not_invented(self):
+        p = paper(126)
+        page = PAGE.replace("<tbody>", "<tbody>" + module.make_row(p))
+        revised, changed = module.backfill_existing_orcids(
+            page, {(126, 2026): p}
+        )
+        self.assertEqual(revised, page)
+        self.assertEqual(changed, [])
+
     def test_pdf_url_is_zenodo_preview_and_rejects_other_hosts(self):
         source = "https://zenodo.org/api/records/23484449/files/eprg-wp-2026-125.pdf/content"
         self.assertEqual(
