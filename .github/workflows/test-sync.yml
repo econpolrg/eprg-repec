@@ -1,0 +1,28 @@
+name: Test EPRG synchronization
+
+on:
+  pull_request:
+    paths:
+      - 'scripts/import_zenodo.py'
+      - 'scripts/sync_wordpress.py'
+      - 'tests/**'
+      - '.github/workflows/test-sync.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  unittest:
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v5
+      - uses: actions/setup-python@v6
+        with:
+          python-version: '3.12'
+      - name: Install dependencies
+        run: pip install requests beautifulsoup4
+      - name: Run regression tests (no WordPress writes)
+        run: python -m unittest discover -s tests -v
+      - name: Validate committed ReDIF archive
+        run: python scripts/validate_repec.py
